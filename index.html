@@ -1,0 +1,139 @@
+<!doctype html>
+<!-- Documento principal de Lumen Planner preparado para publicarse en GitHub Pages. -->
+<html lang="es">
+<head>
+  <!-- Metadatos base para HTML5, PWA y visualizacion correcta en Android. -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1f5eff">
+  <meta name="description" content="Lumen Planner, PWA modular para planificacion escolar.">
+
+  <!-- Titulo visible en navegador e instalacion PWA. -->
+  <title>Lumen Planner</title>
+
+  <!-- Manifest e icono base para instalacion como Progressive Web App. -->
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./assets/icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
+
+  <!-- Hojas de estilo separadas por responsabilidad. -->
+  <link rel="stylesheet" href="./src/css/theme.css">
+  <link rel="stylesheet" href="./src/css/base.css">
+  <link rel="stylesheet" href="./src/css/layout.css">
+  <link rel="stylesheet" href="./src/css/components.css">
+  <link rel="stylesheet" href="./src/css/responsive.css">
+</head>
+<body>
+  <!-- Contenedor raiz con apariencia de agenda digital horizontal. -->
+  <div id="app" class="app-shell planner-shell" data-app-root>
+    <!-- Pestañas superiores funcionales para herramientas rapidas. -->
+    <nav class="planner-tabs planner-tabs-top" aria-label="Secciones rapidas">
+      <button type="button" data-planner-tab="notes">Notas</button>
+      <button type="button" data-planner-tab="line">Linea</button>
+      <button type="button" data-planner-tab="grid">Grid</button>
+      <button type="button" data-planner-tab="table">Tabla</button>
+      <button type="button" data-planner-tab="graph">Graph</button>
+      <button type="button" data-planner-tab="index">Index</button>
+      <button type="button" data-planner-tab="overview">Overview</button>
+      <button type="button" data-planner-tab="monthly">Monthly</button>
+    </nav>
+
+    <div class="planner-case">
+      <!-- Pestañas laterales funcionales para paginas personalizadas. -->
+      <aside class="planner-side-tabs planner-side-tabs-left" aria-label="Paginas personalizadas">
+        <button type="button" data-planner-tab="custom">Custom</button>
+        <button type="button" data-planner-tab="page-1">1</button>
+        <button type="button" data-planner-tab="page-2">2</button>
+        <button type="button" data-planner-tab="page-3">3</button>
+        <button type="button" data-planner-tab="page-4">4</button>
+      </aside>
+
+      <!-- Pestañas laterales funcionales para saltar a meses de Agenda. -->
+      <aside class="planner-side-tabs planner-side-tabs-right" aria-label="Meses de agenda">
+        <button type="button" data-planner-tab="year">Year</button>
+        <button type="button" data-planner-month="0">Jan</button>
+        <button type="button" data-planner-month="1">Feb</button>
+        <button type="button" data-planner-month="2">Mar</button>
+        <button type="button" data-planner-month="3">Apr</button>
+        <button type="button" data-planner-month="4">May</button>
+        <button type="button" data-planner-month="5">Jun</button>
+        <button type="button" data-planner-month="6">Jul</button>
+        <button type="button" data-planner-month="7">Aug</button>
+        <button type="button" data-planner-month="8">Sep</button>
+        <button type="button" data-planner-month="9">Oct</button>
+        <button type="button" data-planner-month="10">Nov</button>
+        <button type="button" data-planner-month="11">Dec</button>
+      </aside>
+
+      <!-- Libro central de dos paginas. -->
+      <div class="planner-book">
+        <!-- Encabezado de marca integrado dentro de la pagina izquierda. -->
+        <header class="app-header planner-brand" data-app-header>
+          <div class="brand-mark" aria-hidden="true">LP</div>
+          <div class="brand-copy">
+            <h1>Lumen Planner</h1>
+            <p>Planificacion escolar progresiva</p>
+          </div>
+        </header>
+
+        <!-- Anillas centrales de la agenda. -->
+        <div class="planner-rings" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <!-- Area principal compacta: cada pestaña muestra solo una vista completa. -->
+        <main class="app-main planner-pages" id="main-content" tabindex="-1">
+          <section class="planner-page planner-page-full" data-planner-view="dashboard" aria-label="Inicio">
+            <!-- Punto de montaje exclusivo para el Dashboard. -->
+            <section id="dashboard-root" data-dashboard-root aria-live="polite"></section>
+          </section>
+
+          <section class="planner-page planner-page-full" data-planner-view="workspace" aria-label="Area de trabajo" hidden>
+            <!-- Panel funcional para pestañas superiores, laterales e inferiores. -->
+            <section class="planner-workspace" data-planner-workspace aria-live="polite"></section>
+          </section>
+
+          <section class="planner-page planner-page-full" data-planner-view="agenda" aria-label="Agenda" hidden>
+            <!-- Punto de montaje exclusivo para el modulo Agenda. -->
+            <section id="agenda-root" data-agenda-root aria-live="polite"></section>
+          </section>
+
+          <section class="planner-page planner-page-full" data-planner-view="alerts" aria-label="Alertas" hidden>
+            <!-- Punto de montaje exclusivo para el modulo Alertas. -->
+            <section id="alerts-root" data-alerts-root aria-live="polite"></section>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Pestañas inferiores funcionales de areas de trabajo. -->
+    <nav class="planner-tabs planner-tabs-bottom" aria-label="Areas del planner">
+      <button type="button" data-planner-tab="dashboard">Inicio</button>
+      <button type="button" data-planner-tab="teacher">Docente</button>
+      <button type="button" data-planner-tab="coordination">Coordinacion</button>
+      <button type="button" data-planner-tab="school">Escolar</button>
+      <button type="button" data-planner-tab="agenda">Agenda</button>
+      <button type="button" data-planner-tab="alerts">Alertas</button>
+      <button type="button" data-planner-tab="planning">Planeacion</button>
+      <button type="button" data-planner-tab="personal">Personal</button>
+      <button type="button" data-planner-tab="review">Revision</button>
+    </nav>
+  </div>
+
+  <!-- Punto de entrada ES6 de la aplicacion. -->
+  <script type="module" src="./src/js/app.js"></script>
+
+  <!-- Respaldo para abrir el archivo directamente cuando el navegador bloquea modulos ES6 en file://. -->
+  <script src="./src/js/app-local-fallback.js"></script>
+
+  <!-- Control funcional de pestañas del planner para modo modular y modo local. -->
+  <script src="./src/js/planner-tabs.js"></script>
+</body>
+</html>

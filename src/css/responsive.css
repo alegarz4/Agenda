@@ -1,0 +1,211 @@
+/* Ajustes responsivos enfocados en Android y pantallas estrechas. */
+@media (max-width: 600px) {
+  .app-shell {
+    padding: var(--space-2);
+  }
+
+  .app-header {
+    align-items: flex-start;
+  }
+
+  .planner-shell {
+    padding: var(--space-3) var(--space-2);
+  }
+
+  .planner-tabs {
+    padding: 0 var(--space-2);
+  }
+
+  .planner-tabs button {
+    min-width: 82px;
+    font-size: 0.65rem;
+  }
+
+  .planner-panel-meta {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .planner-case {
+    padding: var(--space-3);
+    border-radius: 18px;
+  }
+
+  .planner-side-tabs,
+  .planner-rings {
+    display: none;
+  }
+
+  .planner-book {
+    min-height: auto;
+    border-radius: 12px;
+  }
+
+  .planner-brand {
+    padding: var(--space-4);
+  }
+
+  .planner-pages {
+    grid-template-columns: 1fr;
+    padding: 0 var(--space-3) var(--space-3);
+  }
+
+  .planner-page {
+    padding: var(--space-3);
+  }
+
+  .planner-page-left,
+  .planner-page-right {
+    border-right: 0;
+    padding-left: var(--space-3);
+    padding-right: var(--space-3);
+  }
+
+  .empty-state {
+    padding: var(--space-6);
+  }
+
+  /* El encabezado del Dashboard se apila para Android y pantallas estrechas. */
+  .dashboard-hero {
+    grid-template-columns: 1fr;
+    padding: var(--space-4);
+  }
+
+  .dashboard-hero-copy h2 {
+    font-size: 1.55rem;
+  }
+
+  .dashboard-clock {
+    min-width: 0;
+  }
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-card,
+  .dashboard-panel {
+    padding: var(--space-4);
+  }
+
+  .dashboard-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .primary-action {
+    width: 100%;
+  }
+
+  /* Agenda se apila en Android para priorizar lectura y tacto. */
+  .agenda-header {
+    padding: var(--space-4);
+  }
+
+  .agenda-header-actions,
+  .category-legend {
+    justify-items: stretch;
+    justify-content: flex-start;
+  }
+
+  .agenda-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-card,
+  .agenda-panel {
+    padding: var(--space-4);
+  }
+
+  .calendar-grid,
+  .calendar-weekdays {
+    gap: 4px;
+  }
+
+  .calendar-day {
+    min-height: 52px;
+    padding: 0.35rem;
+  }
+
+  .form-actions,
+  .event-form-grid,
+  .agenda-event-list li {
+    grid-template-columns: 1fr;
+  }
+
+  .secondary-action {
+    width: 100%;
+  }
+
+  /* Alertas se apila para mantener controles comodos en Android. */
+  .alerts-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .alerts-header,
+  .alerts-panel {
+    padding: var(--space-4);
+  }
+
+  .alert-window,
+  .alerts-actions,
+  .alerts-list li {
+    width: 100%;
+  }
+
+  .alerts-list li {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 601px) and (max-width: 980px) {
+  .planner-shell {
+    padding: var(--space-4);
+  }
+
+  .planner-case {
+    padding: var(--space-4);
+  }
+
+  .planner-side-tabs,
+  .planner-rings {
+    display: none;
+  }
+
+  .planner-pages {
+    grid-template-columns: 1fr;
+    padding: 0 var(--space-4) var(--space-4);
+  }
+
+  .planner-page-left,
+  .planner-page-right {
+    border-right: 0;
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+
+  /* En tablets, las tarjetas pasan a dos columnas legibles. */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-card {
+    grid-column: 1 / -1;
+  }
+
+  /* Agenda conserva dos zonas, pero apiladas, en tablets estrechas. */
+  .agenda-layout {
+    grid-template-columns: 1fr;
+  }
+
+  /* Alertas tambien se apilan en tablets estrechas. */
+  .alerts-header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .alerts-actions {
+    justify-content: flex-start;
+  }
+}

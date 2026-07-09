@@ -1,0 +1,804 @@
+/* Componentes visuales base compartidos por la app. */
+.brand-mark {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 12px;
+  color: #ffffff;
+  background: var(--color-primary);
+  font-weight: 800;
+}
+
+.brand-copy h1,
+.brand-copy p {
+  margin: 0;
+}
+
+.brand-copy h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.55rem;
+  line-height: 1.1;
+}
+
+.brand-copy p {
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+.empty-state {
+  padding: var(--space-8);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.empty-state h2,
+.empty-state p {
+  margin: 0;
+}
+
+.empty-state p {
+  margin-top: var(--space-2);
+  color: var(--color-muted);
+}
+
+/* Contenedor principal del Dashboard. */
+.dashboard {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Encabezado del Dashboard con saludo, fecha y hora. */
+.dashboard-hero {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-4);
+  border: 1px solid rgba(116, 87, 96, 0.28);
+  border-radius: 0;
+  background: linear-gradient(90deg, #f9f4c8, #ffffff 54%, #d9f5ef);
+  box-shadow: none;
+}
+
+/* Texto secundario pequeno para etiquetar secciones. */
+.eyebrow {
+  margin: 0 0 var(--space-2);
+  color: #7b5d66;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Copia del saludo principal del Dashboard. */
+.dashboard-hero-copy h2,
+.dashboard-hero-copy p {
+  margin: 0;
+}
+
+.dashboard-hero-copy h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.65rem;
+  line-height: 1.15;
+}
+
+.dashboard-subtitle {
+  max-width: 38rem;
+  margin-top: var(--space-3);
+  color: var(--color-muted);
+}
+
+/* Tarjeta compacta para fecha y hora actual. */
+.dashboard-clock {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-3);
+  border: 1px dashed rgba(116, 87, 96, 0.32);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.dashboard-date {
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.dashboard-time {
+  color: var(--color-primary-strong);
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+/* Reticula responsiva para resumen, prioridades y eventos. */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+/* Tarjeta de resumen del dia. */
+.summary-card,
+.dashboard-panel {
+  min-width: 0;
+  padding: var(--space-4);
+  border: 1px solid rgba(116, 87, 96, 0.28);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: none;
+}
+
+.card-kicker {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+/* Numeros principales del resumen diario. */
+.summary-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: var(--space-4) 0;
+}
+
+.summary-metrics div {
+  padding: var(--space-4);
+  border: 1px solid rgba(116, 87, 96, 0.18);
+  border-radius: 0;
+  background: #f8f4d0;
+}
+
+.summary-metrics strong,
+.summary-metrics span {
+  display: block;
+}
+
+.summary-metrics strong {
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.summary-metrics span {
+  margin-top: var(--space-2);
+  color: var(--color-muted);
+  font-size: 0.85rem;
+}
+
+.summary-note {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+/* Cabecera interna para paneles con contador. */
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin: calc(var(--space-4) * -1) calc(var(--space-4) * -1) var(--space-4);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid rgba(116, 87, 96, 0.22);
+  background: #e9c1df;
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+}
+
+.panel-header span {
+  display: grid;
+  min-width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid rgba(116, 87, 96, 0.18);
+  border-radius: 0;
+  color: #4d3d45;
+  background: rgba(255, 255, 255, 0.72);
+  font-weight: 800;
+}
+
+/* Lista de tareas prioritarias. */
+.priority-list,
+.event-list {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.priority-list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+
+.priority-list strong,
+.priority-list small {
+  display: block;
+}
+
+.priority-list small {
+  margin-top: var(--space-1);
+  color: var(--color-muted);
+}
+
+.item-indicator {
+  width: 10px;
+  height: 10px;
+  margin-top: 0.45rem;
+  border-radius: 999px;
+  background: #17b26a;
+}
+
+/* Lista cronologica de proximos eventos. */
+.event-list li {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.event-list time {
+  color: var(--color-primary-strong);
+  font-weight: 800;
+}
+
+/* Zona de accion principal del Dashboard. */
+.dashboard-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.primary-action {
+  min-height: 48px;
+  padding: 0 var(--space-6);
+  border: 0;
+  border-radius: 999px;
+  color: #ffffff;
+  background: var(--color-primary);
+  box-shadow: 0 12px 24px rgba(31, 94, 255, 0.24);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.primary-action:hover {
+  background: var(--color-primary-strong);
+}
+
+.primary-action:focus-visible {
+  outline: 3px solid rgba(31, 94, 255, 0.32);
+  outline-offset: 3px;
+}
+
+.dashboard-actions p {
+  min-height: 1.5rem;
+  margin: 0;
+  color: var(--color-muted);
+}
+
+/* Contenedor principal del modulo Agenda. */
+.agenda {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Encabezado superior de Agenda con accion rapida para volver a hoy. */
+.agenda-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid rgba(116, 87, 96, 0.28);
+  border-radius: 0;
+  background: linear-gradient(90deg, #d8f3f1, #ffffff 52%, #f5c9d2);
+  box-shadow: none;
+}
+
+.agenda-header h2,
+.agenda-header p {
+  margin: 0;
+}
+
+.agenda-header p:not(.eyebrow) {
+  color: var(--color-muted);
+}
+
+.agenda-header h2,
+.alerts-header h2 {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+/* Acciones y leyenda de categorias del encabezado de Agenda. */
+.agenda-header-actions {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+}
+
+.category-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0.35rem;
+  max-width: 420px;
+}
+
+.category-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-muted);
+  background: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.category-legend i {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+}
+
+/* Distribucion principal entre calendario y panel de eventos. */
+.agenda-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  align-items: start;
+}
+
+/* Tarjeta del calendario mensual. */
+.calendar-card,
+.agenda-panel {
+  min-width: 0;
+  padding: var(--space-4);
+  border: 1px solid rgba(116, 87, 96, 0.28);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: none;
+}
+
+/* Barra de navegacion del mes. */
+.calendar-toolbar {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  gap: var(--space-3);
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.calendar-toolbar h3 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  text-align: center;
+}
+
+.icon-button {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-primary-strong);
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.icon-button:hover {
+  border-color: var(--color-primary);
+}
+
+/* Encabezados de dias de la semana. */
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--space-2);
+  margin-bottom: var(--space-2);
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+/* Cuadricula mensual de 6 semanas para evitar saltos de layout. */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.calendar-day {
+  display: grid;
+  min-height: 58px;
+  align-content: space-between;
+  padding: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  color: var(--color-text);
+  background: #ffffff;
+  cursor: pointer;
+  text-align: left;
+}
+
+.calendar-day:hover {
+  border-color: var(--color-primary);
+}
+
+.calendar-day.is-muted {
+  color: #98a2b3;
+  background: #f8fafc;
+}
+
+.calendar-day.is-selected {
+  border-color: var(--color-primary);
+  box-shadow: inset 0 0 0 2px rgba(31, 94, 255, 0.18);
+}
+
+.calendar-day span {
+  font-weight: 800;
+}
+
+/* Indicadores de eventos dentro de cada dia. */
+.event-dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.event-dots i {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+}
+
+/* Formulario de creacion y edicion de eventos. */
+.event-form {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.event-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.event-form label {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.event-form label span {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.event-form input,
+.event-form select,
+.event-form textarea {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  padding: 0.65rem 0.75rem;
+  color: var(--color-text);
+  background: #ffffff;
+}
+
+.event-form textarea {
+  resize: vertical;
+}
+
+.form-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.secondary-action {
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-primary-strong);
+  background: #ffffff;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.secondary-action:hover {
+  border-color: var(--color-primary);
+}
+
+/* Lista de eventos para la fecha seleccionada. */
+.selected-events {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.selected-events h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.empty-agenda {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.agenda-event-list {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.agenda-event-list li {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-left: 5px solid var(--color-primary);
+  border-radius: 0;
+}
+
+.agenda-event-list strong,
+.agenda-event-list small {
+  display: block;
+}
+
+.agenda-event-list small,
+.agenda-event-list p {
+  color: var(--color-muted);
+}
+
+.agenda-event-list p {
+  margin: var(--space-2) 0 0;
+}
+
+.agenda-event-list b {
+  color: var(--color-text);
+}
+
+.event-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.event-actions button {
+  min-height: 34px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-primary-strong);
+  background: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* Contenedor principal del modulo Alertas. */
+.alerts {
+  display: grid;
+  gap: var(--space-4);
+}
+
+/* Encabezado de alertas con controles de permiso y ventana de anticipacion. */
+.alerts-header {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border: 1px solid rgba(116, 87, 96, 0.28);
+  border-radius: 0;
+  background: linear-gradient(90deg, #c6e1f6, #ffffff 58%, #f8efc6);
+  box-shadow: none;
+}
+
+.alerts-header h2,
+.alerts-header p {
+  margin: 0;
+}
+
+.alerts-header p:not(.eyebrow) {
+  color: var(--color-muted);
+}
+
+.alerts-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: var(--space-3);
+}
+
+/* Selector para configurar cuanto antes se muestran los avisos. */
+.alert-window {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 140px;
+}
+
+.alert-window span {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.alert-window select {
+  min-height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0 0.8rem;
+  color: var(--color-text);
+  background: #ffffff;
+  font-weight: 700;
+}
+
+/* Panel de alertas proximas derivadas de eventos de Agenda. */
+.alerts-panel {
+  padding: var(--space-4);
+  border: 1px solid rgba(116, 87, 96, 0.28);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: none;
+}
+
+.alerts-list {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.alerts-list li {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  background: #fffdf8;
+}
+
+.alerts-list strong,
+.alerts-list small {
+  display: block;
+}
+
+.alerts-list small,
+.empty-alerts,
+.alerts-feedback {
+  color: var(--color-muted);
+}
+
+.alerts-list li > span {
+  padding: 0.35rem 0.55rem;
+  border-radius: 999px;
+  color: #05603a;
+  background: #dcfae6;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.empty-alerts,
+.alerts-feedback {
+  margin: 0;
+}
+
+.alerts-feedback {
+  min-height: 1.5rem;
+  margin-top: var(--space-4);
+}
+
+/* Panel que cambia de contenido cuando se presionan las pestañas del planner. */
+.planner-workspace {
+  min-width: 0;
+}
+
+.planner-panel {
+  padding: var(--space-4);
+  border: 1px solid rgba(116, 87, 96, 0.28);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.planner-panel p {
+  margin: 0 0 var(--space-4);
+  color: var(--color-muted);
+}
+
+.planner-panel-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.planner-panel-meta span {
+  padding: 0.35rem 0.55rem;
+  border: 1px solid rgba(116, 87, 96, 0.18);
+  border-radius: 999px;
+  color: #5d4a52;
+  background: #fff8dd;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.planner-panel-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.planner-panel-list li {
+  min-height: 34px;
+  padding: 0.55rem 0.2rem;
+  border-bottom: 1px solid rgba(116, 87, 96, 0.18);
+}
+
+.planner-panel-list label {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-2);
+  align-items: start;
+}
+
+.planner-panel-list input {
+  margin-top: 0.25rem;
+  accent-color: var(--color-primary);
+}
+
+.planner-panel-list input:checked + span {
+  color: var(--color-muted);
+  text-decoration: line-through;
+}
+
+.planner-notes {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.planner-notes span {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.planner-notes textarea {
+  width: 100%;
+  border: 1px solid rgba(116, 87, 96, 0.28);
+  border-radius: 0;
+  padding: var(--space-3);
+  color: var(--color-text);
+  background:
+    repeating-linear-gradient(0deg, transparent 0, transparent 31px, rgba(218, 203, 190, 0.72) 32px),
+    rgba(255, 253, 248, 0.96);
+  resize: vertical;
+}

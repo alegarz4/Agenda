@@ -1,0 +1,33 @@
+/* Normalizacion ligera y estilos base para todos los navegadores modernos. */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: #f5eef2;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--color-text);
+  background:
+    linear-gradient(135deg, rgba(255, 216, 180, 0.55), rgba(245, 188, 221, 0.44) 45%, rgba(186, 238, 224, 0.44)),
+    #f6eef4;
+  font-family: var(--font-sans);
+  line-height: 1.5;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}

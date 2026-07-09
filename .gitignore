@@ -1,0 +1,10 @@
+# Archivos temporales del sistema operativo.
+Thumbs.db
+.DS_Store
+
+# Dependencias externas no usadas por este proyecto base.
+node_modules/
+
+# Salidas locales generadas durante pruebas futuras.
+dist/
+coverage/
