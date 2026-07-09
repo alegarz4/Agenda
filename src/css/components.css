@@ -140,19 +140,99 @@
 /* Reticula responsiva para resumen, prioridades y eventos. */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
   gap: var(--space-3);
 }
 
 /* Tarjeta de resumen del dia. */
 .summary-card,
-.dashboard-panel {
+.dashboard-panel,
+.quick-capture-card {
   min-width: 0;
   padding: var(--space-4);
   border: 1px solid rgba(116, 87, 96, 0.28);
   border-radius: 0;
   background: rgba(255, 255, 255, 0.86);
   box-shadow: none;
+}
+
+.quick-capture-card {
+  grid-row: span 2;
+}
+
+.quick-capture-form {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.quick-capture-form label {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.quick-capture-form label span {
+  color: var(--color-muted);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.quick-capture-form input,
+.quick-capture-form select,
+.quick-capture-form textarea {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0.72rem 0.8rem;
+  color: var(--color-text);
+  background: #ffffff;
+}
+
+.quick-capture-form textarea {
+  resize: vertical;
+}
+
+.quick-capture-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.quick-capture-feedback {
+  min-height: 1.25rem;
+  margin: 0;
+  color: #05603a;
+  font-weight: 700;
+}
+
+.work-summary-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.work-summary-strip article {
+  min-width: 0;
+  padding: var(--space-3);
+  border: 1px solid rgba(116, 87, 96, 0.18);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.work-summary-strip strong,
+.work-summary-strip span {
+  display: block;
+}
+
+.work-summary-strip strong {
+  color: var(--color-primary-strong);
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.work-summary-strip span {
+  margin-top: var(--space-1);
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  font-weight: 800;
 }
 
 .card-kicker {
@@ -358,7 +438,7 @@
   max-width: 420px;
 }
 
-.category-legend span {
+.category-legend button {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -367,8 +447,15 @@
   border-radius: 999px;
   color: var(--color-muted);
   background: #ffffff;
+  cursor: pointer;
   font-size: 0.8rem;
   font-weight: 700;
+}
+
+.category-legend button.is-active {
+  border-color: var(--color-primary);
+  color: var(--color-primary-strong);
+  background: #eef4ff;
 }
 
 .category-legend i {

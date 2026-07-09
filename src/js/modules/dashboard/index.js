@@ -4,6 +4,15 @@
 const DASHBOARD_STORAGE_KEY = 'dashboard';
 const AGENDA_STORAGE_KEY = 'agenda';
 
+const WORK_CATEGORIES = [
+  { id: 'pendiente', label: 'Pendiente' },
+  { id: 'nota', label: 'Nota' },
+  { id: 'asunto', label: 'Asunto importante' },
+  { id: 'reunion', label: 'Reunion' },
+  { id: 'evento', label: 'Evento' },
+  { id: 'personal', label: 'Personal' }
+];
+
 const DEFAULT_DASHBOARD_STATE = {
   userName: 'Alejandra',
   summary: {
@@ -96,6 +105,7 @@ function renderDashboard(rootElement, storage) {
   rootElement.innerHTML = buildDashboardMarkup(dashboardState);
   updateDateTime(rootElement);
   bindDashboardActions(rootElement, storage, dashboardState);
+  bindQuickCapture(rootElement, storage);
 }
 
 function loadDashboardState(storage) {
@@ -123,6 +133,7 @@ function buildDashboardState(storage) {
   const agendaState = storage.get(AGENDA_STORAGE_KEY) || { events: [] };
   const today = getTodayIsoDate();
   const todayEvents = agendaState.events.filter((event) => event.date === today);
+  const openEvents = todayEvents.filter((event) => event.status !== 'realizado');
   const nextEvents = agendaState.events
     .filter((event) => buildEventDate(event) >= new Date())
     .sort((first, second) => buildEventDate(first) - buildEventDate(second))
@@ -132,10 +143,11 @@ function buildDashboardState(storage) {
     ...dashboardState,
     summary: {
       ...dashboardState.summary,
-      pending: todayEvents.filter((event) => event.status !== 'realizado').length,
+      pending: openEvents.length,
       completed: todayEvents.filter((event) => event.status === 'realizado').length,
       nextBlock: nextEvents[0]?.title || dashboardState.summary.nextBlock
     },
+    categorySummary: buildCategorySummary(todayEvents),
     priorityTasks: buildMemoryTasks(todayEvents, dashboardState.priorityTasks),
     upcomingEvents: nextEvents.length ? nextEvents.map((event) => ({
       id: event.id,
@@ -176,6 +188,43 @@ function buildDashboardMarkup(state) {
           <p class="summary-note">Siguiente bloque: ${escapeHtml(state.summary.nextBlock)}</p>
         </article>
 
+        <article class="quick-capture-card">
+          <div class="panel-header">
+            <h3>Captura rapida</h3>
+            <span>+</span>
+          </div>
+          <form class="quick-capture-form" data-quick-capture-form>
+            <label>
+              <span>Tipo</span>
+              <select name="categoryId">
+                ${WORK_CATEGORIES.map((category) => `
+                  <option value="${escapeHtml(category.id)}">${escapeHtml(category.label)}</option>
+                `).join('')}
+              </select>
+            </label>
+            <label>
+              <span>Registro</span>
+              <input name="title" type="text" placeholder="Anota lo importante aqui" required>
+            </label>
+            <div class="quick-capture-row">
+              <label>
+                <span>Fecha</span>
+                <input name="date" type="date" value="${getTodayIsoDate()}" required>
+              </label>
+              <label>
+                <span>Hora</span>
+                <input name="time" type="time">
+              </label>
+            </div>
+            <label>
+              <span>Notas</span>
+              <textarea name="notes" rows="3" placeholder="Contexto, persona relacionada, acuerdo o seguimiento"></textarea>
+            </label>
+            <button class="primary-action" type="submit">Guardar en agenda</button>
+            <p class="quick-capture-feedback" data-quick-capture-feedback role="status"></p>
+          </form>
+        </article>
+
         <article class="dashboard-panel">
           <div class="panel-header">
             <h3>Pendientes prioritarios</h3>
@@ -195,6 +244,15 @@ function buildDashboardMarkup(state) {
             ${state.upcomingEvents.map(buildEventItemMarkup).join('')}
           </ol>
         </article>
+      </section>
+
+      <section class="work-summary-strip" aria-label="Tipos de registros del dia">
+        ${state.categorySummary.map((item) => `
+          <article>
+            <strong>${item.count}</strong>
+            <span>${escapeHtml(item.label)}</span>
+          </article>
+        `).join('')}
       </section>
 
       <section class="dashboard-actions" aria-label="Acciones del Dashboard">
@@ -219,6 +277,72 @@ function buildTaskItemMarkup(task) {
   `;
 }
 
+function buildCategorySummary(events) {
+  return WORK_CATEGORIES.slice(0, 5).map((category) => ({
+    label: category.label,
+    count: events.filter((event) => event.categoryId === category.id).length
+  }));
+}
+
+function bindQuickCapture(rootElement, storage) {
+  const form = rootElement.querySelector('[data-quick-capture-form]');
+  const feedback = rootElement.querySelector('[data-quick-capture-feedback]');
+
+  if (!form || !feedback) {
+    return;
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(form);
+    const date = String(formData.get('date') || getTodayIsoDate());
+    const categoryId = String(formData.get('categoryId') || 'pendiente');
+    const agendaState = storage.get(AGENDA_STORAGE_KEY) || {
+      selectedDate: date,
+      visibleMonth: date.slice(0, 7),
+      editingEventId: null,
+      categories: [],
+      events: []
+    };
+    const newEvent = {
+      id: createEventId(),
+      title: String(formData.get('title') || '').trim(),
+      date,
+      time: String(formData.get('time') || ''),
+      categoryId,
+      priority: categoryId === 'asunto' ? 'alta' : 'normal',
+      status: 'pendiente',
+      reminderMinutes: 60,
+      location: '',
+      people: '',
+      preparation: '',
+      followUp: '',
+      notes: String(formData.get('notes') || '').trim()
+    };
+
+    if (!newEvent.title) {
+      return;
+    }
+
+    const nextAgendaState = {
+      ...agendaState,
+      selectedDate: date,
+      visibleMonth: date.slice(0, 7),
+      events: [...(agendaState.events || []), newEvent]
+    };
+
+    storage.set(AGENDA_STORAGE_KEY, nextAgendaState);
+    window.dispatchEvent(new CustomEvent('lumen:agenda-external-update'));
+
+    const updatedFeedback = rootElement.querySelector('[data-quick-capture-feedback]');
+
+    if (updatedFeedback) {
+      updatedFeedback.textContent = 'Guardado en Agenda.';
+    }
+  });
+}
+
 function buildMemoryTasks(todayEvents, fallbackTasks) {
   const memoryTasks = todayEvents
     .flatMap((event) => [
@@ -237,6 +361,10 @@ function buildMemoryTasks(todayEvents, fallbackTasks) {
     .slice(0, 3);
 
   return memoryTasks.length ? memoryTasks : fallbackTasks;
+}
+
+function createEventId() {
+  return `event-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
 function buildEventItemMarkup(event) {

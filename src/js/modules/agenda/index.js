@@ -40,6 +40,7 @@ const DEFAULT_AGENDA_STATE = {
   selectedDate: getDateInputValue(new Date()),
   visibleMonth: getMonthKey(new Date()),
   editingEventId: null,
+  activeCategoryId: 'all',
   categories: DEFAULT_CATEGORIES,
   events: []
 };
@@ -64,6 +65,7 @@ function createAgendaModule() {
     state = loadAgendaState(storage);
     render();
     bindPlannerMonthTabs();
+    bindExternalAgendaUpdates();
     notifyAgendaChanged();
   }
 
@@ -96,6 +98,13 @@ function createAgendaModule() {
     root.querySelector('[data-agenda-cancel-edit]').addEventListener('click', () => {
       state.editingEventId = null;
       persistAndRender();
+    });
+
+    root.querySelectorAll('[data-agenda-filter]').forEach((button) => {
+      button.addEventListener('click', () => {
+        state.activeCategoryId = button.dataset.agendaFilter;
+        persistAndRender();
+      });
     });
 
     root.querySelectorAll('[data-agenda-day]').forEach((button) => {
@@ -208,6 +217,14 @@ function createAgendaModule() {
     });
   }
 
+  function bindExternalAgendaUpdates() {
+    window.addEventListener('lumen:agenda-external-update', () => {
+      state = loadAgendaState(storage);
+      render();
+      notifyAgendaChanged();
+    });
+  }
+
   return {
     name: 'agenda',
     mount
@@ -239,7 +256,8 @@ function buildAgendaMarkup(agendaState) {
   const editingEvent = agendaState.editingEventId
     ? agendaState.events.find((event) => event.id === agendaState.editingEventId)
     : null;
-  const selectedEvents = getEventsForDate(agendaState.events, agendaState.selectedDate);
+  const filteredEvents = filterEventsByCategory(agendaState.events, agendaState.activeCategoryId);
+  const selectedEvents = getEventsForDate(filteredEvents, agendaState.selectedDate);
 
   return `
     <article class="agenda" aria-labelledby="agenda-title">
@@ -251,7 +269,7 @@ function buildAgendaMarkup(agendaState) {
         </div>
         <div class="agenda-header-actions">
           <div class="category-legend" aria-label="Categorias disponibles">
-            ${buildCategoryLegendMarkup(agendaState.categories)}
+            ${buildCategoryLegendMarkup(agendaState.categories, agendaState.activeCategoryId)}
           </div>
           <button class="secondary-action" type="button" data-agenda-today>Hoy</button>
         </div>
@@ -388,13 +406,18 @@ function buildEventFormFields(agendaState, editingEvent) {
   `;
 }
 
-function buildCategoryLegendMarkup(categories) {
-  return categories.map((category) => `
-    <span>
-      <i style="background:${escapeHtml(category.color)}"></i>
-      ${escapeHtml(category.label)}
-    </span>
-  `).join('');
+function buildCategoryLegendMarkup(categories, activeCategoryId) {
+  return `
+    <button class="${activeCategoryId === 'all' ? 'is-active' : ''}" type="button" data-agenda-filter="all">
+      Todo
+    </button>
+    ${categories.map((category) => `
+      <button class="${activeCategoryId === category.id ? 'is-active' : ''}" type="button" data-agenda-filter="${escapeHtml(category.id)}">
+        <i style="background:${escapeHtml(category.color)}"></i>
+        ${escapeHtml(category.label)}
+      </button>
+    `).join('')}
+  `;
 }
 
 function buildWeekdayMarkup() {
@@ -421,7 +444,7 @@ function buildCalendarDaysMarkup(agendaState, monthDate) {
     const dateValue = getDateInputValue(day);
     const isCurrentMonth = day.getMonth() === month;
     const isSelected = dateValue === agendaState.selectedDate;
-    const dayEvents = getEventsForDate(agendaState.events, dateValue);
+    const dayEvents = getEventsForDate(filterEventsByCategory(agendaState.events, agendaState.activeCategoryId), dateValue);
 
     return `
       <button
@@ -501,6 +524,14 @@ function getEventsForDate(events, dateValue) {
   return events
     .filter((event) => event.date === dateValue)
     .sort((first, second) => first.time.localeCompare(second.time));
+}
+
+function filterEventsByCategory(events, activeCategoryId) {
+  if (!activeCategoryId || activeCategoryId === 'all') {
+    return events;
+  }
+
+  return events.filter((event) => event.categoryId === activeCategoryId);
 }
 
 function getCategoryById(categories, categoryId) {

@@ -1,20 +1,20 @@
 /* Variables globales de tema para mantener consistencia visual. */
 :root {
-  --color-bg: #f7f9fc;
+  --color-bg: #f4f6fb;
   --color-surface: #ffffff;
-  --color-paper: #fffdf8;
-  --color-paper-line: #eadfd2;
-  --color-case: #f0cdbf;
+  --color-paper: #fffdf7;
+  --color-paper-line: #e8dccd;
+  --color-case: #d8e3f4;
   --color-text: #172033;
   --color-muted: #667085;
-  --color-primary: #1f5eff;
-  --color-primary-strong: #1648c7;
+  --color-primary: #2563eb;
+  --color-primary-strong: #1d4ed8;
   --color-border: #d9e1ef;
-  --color-tab-blue: #a8c7ee;
-  --color-tab-pink: #f1bfd9;
-  --color-tab-mint: #a8eadf;
-  --color-tab-yellow: #f7f0bf;
-  --color-tab-lavender: #d5c3ee;
+  --color-tab-blue: #c7d9f6;
+  --color-tab-pink: #f4d3df;
+  --color-tab-mint: #ccebe4;
+  --color-tab-yellow: #f7edc4;
+  --color-tab-lavender: #ddd3f4;
   --shadow-soft: 0 18px 48px rgba(23, 32, 51, 0.12);
   --radius-sm: 8px;
   --radius-md: 12px;

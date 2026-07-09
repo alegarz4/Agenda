@@ -6,6 +6,14 @@ Progressive Web App construida con HTML5, CSS3 y JavaScript ES6, sin librerias e
 
 Lumen Planner es una agenda de trabajo para anotar pendientes, notas, asuntos importantes, reuniones, eventos y seguimientos. Guarda informacion en LocalStorage: registros de agenda, recordatorios, checklists y notas por seccion.
 
+## Funciones principales
+
+- Inicio con captura rapida para guardar pendientes, notas, asuntos, reuniones y eventos.
+- Agenda mensual con filtros por tipo de registro.
+- Alertas locales para eventos proximos.
+- Paneles de notas y checklists por seccion de trabajo.
+- Boton Actualizar para recargar la PWA y revisar nuevas versiones.
+
 ## GitHub Pages
 
 1. Sube todo el contenido de esta carpeta a un repositorio.
