@@ -5,24 +5,34 @@ const AGENDA_STORAGE_KEY = 'agenda';
 
 const DEFAULT_CATEGORIES = [
   {
-    id: 'coordinacion',
-    label: 'Coordinacion',
+    id: 'pendiente',
+    label: 'Pendiente',
     color: '#1f5eff'
   },
   {
-    id: 'docente',
-    label: 'Docente',
+    id: 'nota',
+    label: 'Nota',
+    color: '#667085'
+  },
+  {
+    id: 'asunto',
+    label: 'Asunto importante',
+    color: '#d92d20'
+  },
+  {
+    id: 'reunion',
+    label: 'Reunion',
     color: '#f79009'
+  },
+  {
+    id: 'evento',
+    label: 'Evento',
+    color: '#17b26a'
   },
   {
     id: 'personal',
     label: 'Personal',
-    color: '#17b26a'
-  },
-  {
-    id: 'urgente',
-    label: 'Urgente',
-    color: '#d92d20'
+    color: '#7a5af8'
   }
 ];
 
@@ -235,9 +245,9 @@ function buildAgendaMarkup(agendaState) {
     <article class="agenda" aria-labelledby="agenda-title">
       <header class="agenda-header">
         <div>
-          <p class="eyebrow">Agenda</p>
-          <h2 id="agenda-title">Calendario mensual</h2>
-          <p>Guarda eventos con contexto para no perder acuerdos, pendientes ni recordatorios.</p>
+          <p class="eyebrow">Agenda de trabajo</p>
+          <h2 id="agenda-title">Pendientes, notas, asuntos y reuniones</h2>
+          <p>Registra lo que no debes olvidar con fecha, hora, personas, seguimiento y notas.</p>
         </div>
         <div class="agenda-header-actions">
           <div class="category-legend" aria-label="Categorias disponibles">
@@ -262,16 +272,16 @@ function buildAgendaMarkup(agendaState) {
           </div>
         </div>
 
-        <aside class="agenda-panel" aria-label="Formulario de eventos">
+        <aside class="agenda-panel" aria-label="Formulario de registros de agenda">
           <form class="event-form" data-agenda-form>
             <div class="panel-header">
-              <h3>${editingEvent ? 'Editar evento' : 'Crear evento'}</h3>
+              <h3>${editingEvent ? 'Editar registro' : 'Nuevo registro'}</h3>
               <span>${selectedEvents.length}</span>
             </div>
             ${buildEventFormFields(agendaState, editingEvent)}
             <div class="form-actions">
               <button class="primary-action" type="submit">
-                ${editingEvent ? 'Guardar cambios' : 'Crear evento'}
+                ${editingEvent ? 'Guardar cambios' : 'Guardar registro'}
               </button>
               <button class="secondary-action" type="button" data-agenda-cancel-edit>
                 Cancelar
@@ -279,8 +289,8 @@ function buildAgendaMarkup(agendaState) {
             </div>
           </form>
 
-          <section class="selected-events" aria-label="Eventos del dia seleccionado">
-            <h3>Eventos del dia</h3>
+          <section class="selected-events" aria-label="Registros del dia seleccionado">
+            <h3>Registros del dia</h3>
             ${buildSelectedEventsMarkup(selectedEvents, agendaState.categories)}
           </section>
         </aside>
@@ -305,8 +315,8 @@ function buildEventFormFields(agendaState, editingEvent) {
 
   return `
     <label>
-      <span>Titulo</span>
-      <input name="title" type="text" value="${escapeHtml(eventTitle)}" placeholder="Nombre del evento" required>
+      <span>Que necesitas anotar</span>
+      <input name="title" type="text" value="${escapeHtml(eventTitle)}" placeholder="Pendiente, nota, asunto, reunion o evento" required>
     </label>
     <label>
       <span>Fecha</span>
@@ -357,23 +367,23 @@ function buildEventFormFields(agendaState, editingEvent) {
     </label>
     <label>
       <span>Lugar / medio</span>
-      <input name="location" type="text" value="${escapeHtml(eventLocation)}" placeholder="Direccion, aula, Meet, llamada, oficina">
+      <input name="location" type="text" value="${escapeHtml(eventLocation)}" placeholder="Oficina, llamada, mensaje, enlace o direccion">
     </label>
     <label>
-      <span>Personas involucradas</span>
-      <input name="people" type="text" value="${escapeHtml(eventPeople)}" placeholder="Nombre, equipo, area o contacto">
+      <span>Personas relacionadas</span>
+      <input name="people" type="text" value="${escapeHtml(eventPeople)}" placeholder="Nombre, area, contacto o equipo">
     </label>
     <label>
-      <span>Preparar antes</span>
-      <textarea name="preparation" rows="3" placeholder="Documentos, materiales, datos o acuerdos que debo llevar">${escapeHtml(eventPreparation)}</textarea>
+      <span>Antes / preparar</span>
+      <textarea name="preparation" rows="3" placeholder="Documentos, datos, mensajes o detalles que necesito tener listos">${escapeHtml(eventPreparation)}</textarea>
     </label>
     <label>
-      <span>Seguimiento despues</span>
+      <span>Seguimiento</span>
       <textarea name="followUp" rows="3" placeholder="A quien avisar, que enviar, que confirmar o que revisar">${escapeHtml(eventFollowUp)}</textarea>
     </label>
     <label>
       <span>Notas</span>
-      <textarea name="notes" rows="4" placeholder="Detalles importantes, acuerdos, contexto o decisiones">${escapeHtml(eventNotes)}</textarea>
+      <textarea name="notes" rows="4" placeholder="Detalles importantes, acuerdos, contexto, decisiones o recordatorios">${escapeHtml(eventNotes)}</textarea>
     </label>
   `;
 }
@@ -436,7 +446,7 @@ function buildEventDot(event, categories) {
 
 function buildSelectedEventsMarkup(events, categories) {
   if (!events.length) {
-    return '<p class="empty-agenda">No hay eventos para esta fecha.</p>';
+    return '<p class="empty-agenda">No hay registros para esta fecha.</p>';
   }
 
   return `

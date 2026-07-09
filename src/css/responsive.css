@@ -42,7 +42,13 @@
   }
 
   .planner-brand {
+    grid-template-columns: auto minmax(0, 1fr);
     padding: var(--space-4);
+  }
+
+  .refresh-action {
+    grid-column: 1 / -1;
+    width: 100%;
   }
 
   .planner-pages {
@@ -99,6 +105,7 @@
 
   /* Agenda se apila en Android para priorizar lectura y tacto. */
   .agenda-header {
+    grid-template-columns: 1fr;
     padding: var(--space-4);
   }
 
@@ -196,6 +203,10 @@
 
   /* Agenda conserva dos zonas, pero apiladas, en tablets estrechas. */
   .agenda-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .agenda-header {
     grid-template-columns: 1fr;
   }
 

@@ -4,7 +4,7 @@ Progressive Web App construida con HTML5, CSS3 y JavaScript ES6, sin librerias e
 
 ## Uso
 
-Lumen Planner es una agenda de trabajo para coordinar actividades docentes, de coordinacion y personales. Guarda informacion en LocalStorage: eventos, contexto, recordatorios, checklists y notas por seccion.
+Lumen Planner es una agenda de trabajo para anotar pendientes, notas, asuntos importantes, reuniones, eventos y seguimientos. Guarda informacion en LocalStorage: registros de agenda, recordatorios, checklists y notas por seccion.
 
 ## GitHub Pages
 

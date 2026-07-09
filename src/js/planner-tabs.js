@@ -11,11 +11,77 @@
   };
 
   const PANEL_CONTENT = {
+    capture: {
+      title: 'Captura rapida',
+      subtitle: 'Anota cualquier pendiente, nota, asunto o evento antes de que se pierda el detalle.',
+      group: 'Entrada',
+      checklist: ['Escribir el tema', 'Definir si es pendiente, nota, asunto, reunion o evento', 'Agregar fecha si aplica', 'Moverlo a Agenda si necesita recordatorio']
+    },
+    pending: {
+      title: 'Pendientes',
+      subtitle: 'Lista operativa para tareas abiertas, compromisos y acciones por cerrar.',
+      group: 'Trabajo',
+      checklist: ['Pendiente nuevo', 'Responsable o persona relacionada', 'Fecha limite', 'Siguiente accion', 'Estado revisado']
+    },
     notes: {
-      title: 'Notas rapidas',
-      subtitle: 'Captura acuerdos, pendientes y observaciones del dia.',
-      group: 'Herramientas',
-      checklist: ['Registrar acuerdo importante', 'Anotar pendiente urgente', 'Guardar idea para clase', 'Revisar nota al cierre']
+      title: 'Notas',
+      subtitle: 'Espacio libre para ideas, observaciones, datos sueltos y contexto importante.',
+      group: 'Trabajo',
+      checklist: ['Nota registrada', 'Contexto suficiente', 'Dato importante marcado', 'Revisar despues si requiere accion']
+    },
+    matters: {
+      title: 'Asuntos importantes',
+      subtitle: 'Temas delicados o relevantes que necesitan seguimiento claro.',
+      group: 'Prioridad',
+      checklist: ['Asunto descrito', 'Impacto identificado', 'Persona o area relacionada', 'Fecha de seguimiento', 'Accion definida']
+    },
+    meetings: {
+      title: 'Reuniones',
+      subtitle: 'Prepara juntas, llamadas y acuerdos para entrar con claridad y salir con acciones.',
+      group: 'Reuniones',
+      checklist: ['Objetivo de la reunion', 'Personas convocadas', 'Puntos a tratar', 'Acuerdos', 'Seguimiento posterior']
+    },
+    events: {
+      title: 'Eventos',
+      subtitle: 'Registra actividades programadas, fechas importantes y recordatorios.',
+      group: 'Agenda',
+      checklist: ['Evento identificado', 'Fecha y hora', 'Lugar o medio', 'Preparativos', 'Recordatorio en Agenda']
+    },
+    followup: {
+      title: 'Seguimiento',
+      subtitle: 'Controla lo que ya se hablo, lo que falta confirmar y lo que no debe olvidarse.',
+      group: 'Cierre',
+      checklist: ['Que se acordo', 'A quien avisar', 'Que enviar o revisar', 'Fecha de revision', 'Cierre registrado']
+    },
+    today: {
+      title: 'Hoy',
+      subtitle: 'Vista rapida para concentrar lo que debe resolverse durante la jornada.',
+      group: 'Dia',
+      checklist: ['Pendiente principal', 'Reunion o evento clave', 'Asunto importante', 'Nota relevante', 'Cierre del dia']
+    },
+    urgent: {
+      title: 'Urgente',
+      subtitle: 'Lugar para lo que requiere atencion inmediata o no puede esperar.',
+      group: 'Prioridad',
+      checklist: ['Urgencia clara', 'Hora limite', 'Persona involucrada', 'Riesgo si no se atiende', 'Accion inmediata']
+    },
+    waiting: {
+      title: 'En espera',
+      subtitle: 'Seguimiento de respuestas, documentos, llamadas o confirmaciones pendientes.',
+      group: 'Seguimiento',
+      checklist: ['Que espero', 'De quien', 'Desde cuando', 'Cuando insistir', 'Resultado recibido']
+    },
+    calls: {
+      title: 'Llamadas y mensajes',
+      subtitle: 'Control de personas por contactar y mensajes importantes por enviar.',
+      group: 'Contacto',
+      checklist: ['Persona', 'Tema', 'Medio de contacto', 'Mensaje enviado', 'Respuesta registrada']
+    },
+    archive: {
+      title: 'Archivo',
+      subtitle: 'Referencia rapida para datos, acuerdos o notas que conviene conservar.',
+      group: 'Consulta',
+      checklist: ['Dato guardado', 'Tema relacionado', 'Fecha', 'Donde encontrarlo', 'Revisado']
     },
     line: {
       title: 'Bitacora diaria',
@@ -54,10 +120,10 @@
       checklist: ['Revisar agenda', 'Confirmar prioridades', 'Detectar riesgos', 'Preparar cierre']
     },
     monthly: {
-      title: 'Revision mensual',
-      subtitle: 'Planea entregables, reuniones, evaluaciones y eventos del mes.',
-      group: 'Herramientas',
-      checklist: ['Eventos del mes', 'Fechas de evaluacion', 'Reuniones clave', 'Reportes pendientes']
+      title: 'Vista mensual',
+      subtitle: 'Organiza pendientes, reuniones, eventos y asuntos importantes del mes.',
+      group: 'Mes',
+      checklist: ['Fechas importantes', 'Reuniones principales', 'Pendientes de cierre', 'Asuntos a vigilar']
     },
     custom: {
       title: 'Pagina personalizada',
@@ -91,9 +157,9 @@
     },
     year: {
       title: 'Vista anual',
-      subtitle: 'Mapa de ciclos, cortes, evaluaciones y eventos institucionales.',
+      subtitle: 'Mapa de fechas importantes, periodos de trabajo y eventos que no deben olvidarse.',
       group: 'Agenda',
-      checklist: ['Cortes de evaluacion', 'CTE y reuniones', 'Eventos escolares', 'Periodos administrativos']
+      checklist: ['Fechas importantes', 'Eventos grandes', 'Periodos de trabajo', 'Recordatorios anuales']
     },
     teacher: {
       title: 'Docente',
@@ -156,6 +222,7 @@
 
     bindTabButtons(workspace);
     bindMonthButtons();
+    bindRefreshButton();
 
     const savedTab = readSavedTab();
     activateTab(savedTab || 'dashboard', workspace);
@@ -187,6 +254,30 @@
           }
         }));
       });
+    });
+  }
+
+  function bindRefreshButton() {
+    const refreshButton = document.querySelector('[data-refresh-app]');
+
+    if (!refreshButton) {
+      return;
+    }
+
+    refreshButton.addEventListener('click', () => {
+      refreshButton.disabled = true;
+      refreshButton.textContent = 'Actualizando...';
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistration()
+          .then((registration) => registration?.update())
+          .finally(() => {
+            window.location.reload();
+          });
+        return;
+      }
+
+      window.location.reload();
     });
   }
 

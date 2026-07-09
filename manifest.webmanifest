@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Lumen Planner",
   "short_name": "Lumen",
-  "description": "PWA modular para agenda docente, coordinacion escolar y organizacion personal.",
+  "description": "PWA para agenda de trabajo, pendientes, notas, asuntos importantes, reuniones y eventos.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

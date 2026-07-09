@@ -5,45 +5,45 @@ const DASHBOARD_STORAGE_KEY = 'dashboard';
 const AGENDA_STORAGE_KEY = 'agenda';
 
 const DEFAULT_DASHBOARD_STATE = {
-  userName: 'Equipo Lumen',
+  userName: 'Alejandra',
   summary: {
-    title: 'Resumen del dia',
+    title: 'Resumen de trabajo',
     completed: 0,
     pending: 3,
-    nextBlock: 'Planeacion inicial'
+    nextBlock: 'Revisar agenda'
   },
   priorityTasks: [
     {
-      id: 'task-lesson-plan',
-      label: 'Revisar planeaciones del dia',
-      meta: 'Alta prioridad'
+      id: 'task-pending',
+      label: 'Revisar pendientes del dia',
+      meta: 'Prioridad alta'
     },
     {
-      id: 'task-attendance',
-      label: 'Confirmar pendientes de asistencia',
-      meta: 'Antes del receso'
+      id: 'task-meetings',
+      label: 'Confirmar reuniones y llamadas',
+      meta: 'Antes de iniciar'
     },
     {
-      id: 'task-materials',
-      label: 'Preparar materiales de clase',
-      meta: 'Bloque vespertino'
+      id: 'task-important',
+      label: 'Marcar asuntos importantes',
+      meta: 'Seguimiento'
     }
   ],
   upcomingEvents: [
     {
-      id: 'event-staff',
+      id: 'event-review',
       time: '09:00',
-      title: 'Revision de agenda escolar'
+      title: 'Revision de agenda'
     },
     {
-      id: 'event-follow-up',
+      id: 'event-follow',
       time: '11:30',
-      title: 'Seguimiento academico'
+      title: 'Seguimiento de pendientes'
     },
     {
-      id: 'event-planning',
+      id: 'event-notes',
       time: '14:00',
-      title: 'Organizacion de actividades'
+      title: 'Captura de notas importantes'
     }
   ]
 };
@@ -150,9 +150,9 @@ function buildDashboardMarkup(state) {
     <article class="dashboard" aria-labelledby="dashboard-title">
       <section class="dashboard-hero">
         <div class="dashboard-hero-copy">
-          <p class="eyebrow">Dashboard</p>
+          <p class="eyebrow">Inicio</p>
           <h2 id="dashboard-title">${getGreeting()}, ${escapeHtml(state.userName)}</h2>
-          <p class="dashboard-subtitle">Este es tu panorama operativo para mantener el dia ordenado.</p>
+          <p class="dashboard-subtitle">Tu agenda de trabajo para pendientes, notas, asuntos importantes, reuniones y eventos.</p>
         </div>
         <div class="dashboard-clock" aria-label="Fecha y hora actual">
           <span class="dashboard-date" data-dashboard-date></span>
@@ -178,7 +178,7 @@ function buildDashboardMarkup(state) {
 
         <article class="dashboard-panel">
           <div class="panel-header">
-            <h3>Tareas prioritarias</h3>
+            <h3>Pendientes prioritarios</h3>
             <span>${state.priorityTasks.length}</span>
           </div>
           <ul class="priority-list">
@@ -188,7 +188,7 @@ function buildDashboardMarkup(state) {
 
         <article class="dashboard-panel">
           <div class="panel-header">
-            <h3>Proximos eventos</h3>
+            <h3>Proximos registros</h3>
             <span>${state.upcomingEvents.length}</span>
           </div>
           <ol class="event-list">
@@ -277,7 +277,7 @@ function bindDashboardActions(rootElement, storage, state) {
     };
 
     storage.set(DASHBOARD_STORAGE_KEY, updatedState);
-    feedbackElement.textContent = 'Dia marcado para organizar. Las acciones detalladas se agregaran en el modulo de planeacion.';
+    feedbackElement.textContent = 'Dia marcado para organizar. Agrega pendientes, notas, reuniones o eventos en Agenda.';
   });
 }
 

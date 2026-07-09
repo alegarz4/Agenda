@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#1f5eff">
-  <meta name="description" content="Lumen Planner, PWA modular para planificacion escolar.">
+  <meta name="description" content="Lumen Planner, agenda de trabajo para pendientes, notas, asuntos importantes, reuniones y eventos.">
 
   <!-- Titulo visible en navegador e instalacion PWA. -->
   <title>Lumen Planner</title>
@@ -28,41 +28,41 @@
   <div id="app" class="app-shell planner-shell" data-app-root>
     <!-- Pestañas superiores funcionales para herramientas rapidas. -->
     <nav class="planner-tabs planner-tabs-top" aria-label="Secciones rapidas">
+      <button type="button" data-planner-tab="capture">Captura</button>
+      <button type="button" data-planner-tab="pending">Pendientes</button>
       <button type="button" data-planner-tab="notes">Notas</button>
-      <button type="button" data-planner-tab="line">Linea</button>
-      <button type="button" data-planner-tab="grid">Grid</button>
-      <button type="button" data-planner-tab="table">Tabla</button>
-      <button type="button" data-planner-tab="graph">Graph</button>
-      <button type="button" data-planner-tab="index">Index</button>
-      <button type="button" data-planner-tab="overview">Overview</button>
-      <button type="button" data-planner-tab="monthly">Monthly</button>
+      <button type="button" data-planner-tab="matters">Asuntos</button>
+      <button type="button" data-planner-tab="meetings">Reuniones</button>
+      <button type="button" data-planner-tab="events">Eventos</button>
+      <button type="button" data-planner-tab="followup">Seguimiento</button>
+      <button type="button" data-planner-tab="monthly">Mensual</button>
     </nav>
 
     <div class="planner-case">
       <!-- Pestañas laterales funcionales para paginas personalizadas. -->
       <aside class="planner-side-tabs planner-side-tabs-left" aria-label="Paginas personalizadas">
-        <button type="button" data-planner-tab="custom">Custom</button>
-        <button type="button" data-planner-tab="page-1">1</button>
-        <button type="button" data-planner-tab="page-2">2</button>
-        <button type="button" data-planner-tab="page-3">3</button>
-        <button type="button" data-planner-tab="page-4">4</button>
+        <button type="button" data-planner-tab="today">Hoy</button>
+        <button type="button" data-planner-tab="urgent">Urgente</button>
+        <button type="button" data-planner-tab="waiting">Espera</button>
+        <button type="button" data-planner-tab="calls">Llamar</button>
+        <button type="button" data-planner-tab="archive">Archivo</button>
       </aside>
 
       <!-- Pestañas laterales funcionales para saltar a meses de Agenda. -->
       <aside class="planner-side-tabs planner-side-tabs-right" aria-label="Meses de agenda">
-        <button type="button" data-planner-tab="year">Year</button>
-        <button type="button" data-planner-month="0">Jan</button>
+        <button type="button" data-planner-tab="year">Año</button>
+        <button type="button" data-planner-month="0">Ene</button>
         <button type="button" data-planner-month="1">Feb</button>
         <button type="button" data-planner-month="2">Mar</button>
-        <button type="button" data-planner-month="3">Apr</button>
+        <button type="button" data-planner-month="3">Abr</button>
         <button type="button" data-planner-month="4">May</button>
         <button type="button" data-planner-month="5">Jun</button>
         <button type="button" data-planner-month="6">Jul</button>
-        <button type="button" data-planner-month="7">Aug</button>
+        <button type="button" data-planner-month="7">Ago</button>
         <button type="button" data-planner-month="8">Sep</button>
         <button type="button" data-planner-month="9">Oct</button>
         <button type="button" data-planner-month="10">Nov</button>
-        <button type="button" data-planner-month="11">Dec</button>
+        <button type="button" data-planner-month="11">Dic</button>
       </aside>
 
       <!-- Libro central de dos paginas. -->
@@ -72,8 +72,11 @@
           <div class="brand-mark" aria-hidden="true">LP</div>
           <div class="brand-copy">
             <h1>Lumen Planner</h1>
-            <p>Planificacion escolar progresiva</p>
+            <p>Agenda de trabajo y seguimiento diario</p>
           </div>
+          <button class="refresh-action" type="button" data-refresh-app aria-label="Actualizar la agenda">
+            Actualizar
+          </button>
         </header>
 
         <!-- Anillas centrales de la agenda. -->
@@ -116,14 +119,13 @@
     <!-- Pestañas inferiores funcionales de areas de trabajo. -->
     <nav class="planner-tabs planner-tabs-bottom" aria-label="Areas del planner">
       <button type="button" data-planner-tab="dashboard">Inicio</button>
-      <button type="button" data-planner-tab="teacher">Docente</button>
-      <button type="button" data-planner-tab="coordination">Coordinacion</button>
-      <button type="button" data-planner-tab="school">Escolar</button>
+      <button type="button" data-planner-tab="pending">Pendientes</button>
+      <button type="button" data-planner-tab="notes">Notas</button>
+      <button type="button" data-planner-tab="matters">Asuntos</button>
+      <button type="button" data-planner-tab="meetings">Reuniones</button>
+      <button type="button" data-planner-tab="events">Eventos</button>
       <button type="button" data-planner-tab="agenda">Agenda</button>
       <button type="button" data-planner-tab="alerts">Alertas</button>
-      <button type="button" data-planner-tab="planning">Planeacion</button>
-      <button type="button" data-planner-tab="personal">Personal</button>
-      <button type="button" data-planner-tab="review">Revision</button>
     </nav>
   </div>
 
