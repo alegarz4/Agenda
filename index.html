@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#1f5eff">
-  <meta name="description" content="Lumen Planner, agenda de trabajo para pendientes, notas, asuntos importantes, reuniones y eventos.">
+  <meta name="description" content="Lumen Planner, agenda de coordinacion para eventos, llamadas, casos especiales, notas importantes, calendario escolar y alertas.">
 
   <!-- Titulo visible en navegador e instalacion PWA. -->
   <title>Lumen Planner</title>
@@ -29,13 +29,12 @@
     <!-- Pestañas superiores funcionales para herramientas rapidas. -->
     <nav class="planner-tabs planner-tabs-top" aria-label="Secciones rapidas">
       <button type="button" data-planner-tab="capture">Captura</button>
-      <button type="button" data-planner-tab="pending">Pendientes</button>
-      <button type="button" data-planner-tab="notes">Notas</button>
-      <button type="button" data-planner-tab="matters">Asuntos</button>
-      <button type="button" data-planner-tab="meetings">Reuniones</button>
       <button type="button" data-planner-tab="events">Eventos</button>
+      <button type="button" data-planner-tab="calls">Llamadas</button>
+      <button type="button" data-planner-tab="specialcases">Casos</button>
+      <button type="button" data-planner-tab="importantnotes">Notas importantes</button>
+      <button type="button" data-planner-tab="schoolyear">Calendario SEJ</button>
       <button type="button" data-planner-tab="followup">Seguimiento</button>
-      <button type="button" data-planner-tab="monthly">Mensual</button>
     </nav>
 
     <div class="planner-case">
@@ -44,7 +43,7 @@
         <button type="button" data-planner-tab="today">Hoy</button>
         <button type="button" data-planner-tab="urgent">Urgente</button>
         <button type="button" data-planner-tab="waiting">Espera</button>
-        <button type="button" data-planner-tab="calls">Llamar</button>
+        <button type="button" data-planner-tab="importantnotes">Notas</button>
         <button type="button" data-planner-tab="archive">Archivo</button>
       </aside>
 
@@ -72,7 +71,7 @@
           <div class="brand-mark" aria-hidden="true">LP</div>
           <div class="brand-copy">
             <h1>Lumen Planner</h1>
-            <p>Agenda de trabajo y seguimiento diario</p>
+            <p>Agenda de coordinacion, eventos y alertas</p>
           </div>
           <button class="refresh-action" type="button" data-refresh-app aria-label="Actualizar la agenda">
             Actualizar
@@ -119,11 +118,10 @@
     <!-- Pestañas inferiores funcionales de areas de trabajo. -->
     <nav class="planner-tabs planner-tabs-bottom" aria-label="Areas del planner">
       <button type="button" data-planner-tab="dashboard">Inicio</button>
-      <button type="button" data-planner-tab="pending">Pendientes</button>
-      <button type="button" data-planner-tab="notes">Notas</button>
-      <button type="button" data-planner-tab="matters">Asuntos</button>
-      <button type="button" data-planner-tab="meetings">Reuniones</button>
       <button type="button" data-planner-tab="events">Eventos</button>
+      <button type="button" data-planner-tab="calls">Llamadas</button>
+      <button type="button" data-planner-tab="specialcases">Casos</button>
+      <button type="button" data-planner-tab="importantnotes">Notas</button>
       <button type="button" data-planner-tab="agenda">Agenda</button>
       <button type="button" data-planner-tab="alerts">Alertas</button>
     </nav>

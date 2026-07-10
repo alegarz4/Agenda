@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Lumen Planner",
   "short_name": "Lumen",
-  "description": "PWA para agenda de trabajo, pendientes, notas, asuntos importantes, reuniones y eventos.",
+  "description": "PWA para agenda de coordinacion, eventos, llamadas, casos especiales, notas importantes, calendario escolar y alertas.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

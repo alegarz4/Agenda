@@ -4,17 +4,22 @@ Progressive Web App construida con HTML5, CSS3 y JavaScript ES6, sin librerias e
 
 ## Uso
 
-Lumen Planner es una agenda de trabajo para anotar pendientes, notas, asuntos importantes, reuniones, eventos y seguimientos. Guarda informacion en LocalStorage: registros de agenda, recordatorios, checklists y notas por seccion.
+Lumen Planner es una agenda de coordinacion para anotar eventos, llamadas, casos especiales, notas importantes, fechas del calendario escolar y seguimientos. Guarda informacion en LocalStorage: registros de agenda, recordatorios, checklists y notas por seccion.
 
 ## Funciones principales
 
-- Inicio con captura rapida para guardar pendientes, notas, asuntos, reuniones y eventos.
-- Agenda mensual con filtros por tipo de registro.
+- Inicio con captura rapida para guardar eventos, llamadas, casos especiales, notas importantes, calendario SEJ y asuntos personales.
+- Agenda mensual con filtros por tipo de registro y categorias por color.
+- Exportacion de la vista diaria o mensual en archivo `.xls`; en celulares compatibles abre el dialogo de compartir para enviarlo por WhatsApp.
 - Alertas locales para eventos proximos, emitidas por Service Worker cuando el navegador lo permite.
 - Aviso al reabrir la app si hubo recordatorios que debieron iniciar mientras no estaba abierta.
 - Descarga y restauracion manual de respaldos en formato JSON desde el Dashboard.
-- Paneles de notas y checklists por seccion de trabajo.
+- Paneles de notas y checklists para eventos, llamadas, casos especiales, notas importantes, calendario escolar SEJ y seguimiento.
 - Boton Actualizar para recargar la PWA y revisar nuevas versiones.
+
+## Calendario escolar SEJ
+
+La app no consulta servidores externos para no depender de credenciales ni APIs. Usa la pestaña `Calendario SEJ` y la categoria `Calendario SEJ` para registrar fechas publicadas por la Secretaria de Educacion Jalisco; cuando exista una actualizacion oficial, capturala ahi y quedara guardada en el dispositivo.
 
 ## Respaldo de informacion
 

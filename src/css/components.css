@@ -206,7 +206,7 @@
 
 .work-summary-strip {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: var(--space-3);
 }
 
@@ -462,6 +462,20 @@
   width: 9px;
   height: 9px;
   border-radius: 999px;
+}
+
+.agenda-export-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.agenda-export-feedback {
+  min-height: 1.2rem;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
 /* Distribucion principal entre calendario y panel de eventos. */

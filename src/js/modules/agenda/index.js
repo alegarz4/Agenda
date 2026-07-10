@@ -5,36 +5,43 @@ const AGENDA_STORAGE_KEY = 'agenda';
 
 const DEFAULT_CATEGORIES = [
   {
-    id: 'pendiente',
-    label: 'Pendiente',
-    color: '#1f5eff'
-  },
-  {
-    id: 'nota',
-    label: 'Nota',
-    color: '#667085'
-  },
-  {
-    id: 'asunto',
-    label: 'Asunto importante',
-    color: '#d92d20'
-  },
-  {
-    id: 'reunion',
-    label: 'Reunion',
-    color: '#f79009'
-  },
-  {
     id: 'evento',
     label: 'Evento',
     color: '#17b26a'
   },
   {
+    id: 'llamada',
+    label: 'Llamada',
+    color: '#1f5eff'
+  },
+  {
+    id: 'caso_especial',
+    label: 'Caso especial',
+    color: '#d92d20'
+  },
+  {
+    id: 'nota_importante',
+    label: 'Nota importante',
+    color: '#7a5af8'
+  },
+  {
+    id: 'calendario_sej',
+    label: 'Calendario SEJ',
+    color: '#f79009'
+  },
+  {
     id: 'personal',
     label: 'Personal',
-    color: '#7a5af8'
+    color: '#667085'
   }
 ];
+
+const LEGACY_CATEGORY_MAP = {
+  pendiente: 'evento',
+  nota: 'nota_importante',
+  asunto: 'caso_especial',
+  reunion: 'evento'
+};
 
 const DEFAULT_AGENDA_STATE = {
   selectedDate: getDateInputValue(new Date()),
@@ -94,6 +101,14 @@ function createAgendaModule() {
     });
 
     root.querySelector('[data-agenda-form]').addEventListener('submit', handleFormSubmit);
+
+    root.querySelector('[data-agenda-export-month]').addEventListener('click', () => {
+      exportAgendaRecords('month');
+    });
+
+    root.querySelector('[data-agenda-export-day]').addEventListener('click', () => {
+      exportAgendaRecords('day');
+    });
 
     root.querySelector('[data-agenda-cancel-edit]').addEventListener('click', () => {
       state.editingEventId = null;
@@ -185,6 +200,43 @@ function createAgendaModule() {
     persistAndRender();
   }
 
+  async function exportAgendaRecords(scope) {
+    const records = scope === 'day'
+      ? getEventsForDate(state.events, state.selectedDate)
+      : getEventsForMonth(state.events, state.visibleMonth);
+    const feedback = root.querySelector('[data-agenda-export-feedback]');
+
+    if (!records.length) {
+      updateExportFeedback(feedback, 'No hay registros para exportar en esta vista.');
+      return;
+    }
+
+    const fileName = scope === 'day'
+      ? `lumen-agenda-${state.selectedDate}.xls`
+      : `lumen-agenda-${state.visibleMonth}.xls`;
+    const workbook = buildExcelWorkbook(records, state.categories);
+    const file = new File([workbook], fileName, {
+      type: 'application/vnd.ms-excel'
+    });
+
+    if (navigator.canShare?.({ files: [file] }) && navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Lumen Planner',
+          text: 'Agenda exportada desde Lumen Planner.',
+          files: [file]
+        });
+        updateExportFeedback(feedback, 'Archivo listo para compartir por WhatsApp.');
+        return;
+      } catch (error) {
+        updateExportFeedback(feedback, 'No se compartio. Descargue el archivo para enviarlo manualmente.');
+      }
+    }
+
+    downloadFile(file, fileName);
+    updateExportFeedback(feedback, 'Archivo Excel descargado. Puedes enviarlo por WhatsApp como documento.');
+  }
+
   function persistAndRender() {
     saveAgendaState(storage, state);
     render();
@@ -239,16 +291,99 @@ function loadAgendaState(storage) {
     return structuredCloneSafe(DEFAULT_AGENDA_STATE);
   }
 
+  const normalizedEvents = (storedState.events || []).map((event) => ({
+    ...event,
+    categoryId: LEGACY_CATEGORY_MAP[event.categoryId] || event.categoryId || DEFAULT_CATEGORIES[0].id
+  }));
+
   return {
     ...DEFAULT_AGENDA_STATE,
     ...storedState,
-    categories: storedState.categories || DEFAULT_CATEGORIES,
-    events: storedState.events || []
+    categories: DEFAULT_CATEGORIES,
+    events: normalizedEvents
   };
 }
 
 function saveAgendaState(storage, agendaState) {
   storage.set(AGENDA_STORAGE_KEY, agendaState);
+}
+
+function getEventsForMonth(events, monthKey) {
+  return events
+    .filter((event) => event.date?.startsWith(monthKey))
+    .sort((first, second) => `${first.date} ${first.time}`.localeCompare(`${second.date} ${second.time}`));
+}
+
+function buildExcelWorkbook(events, categories) {
+  const rows = events.map((event) => {
+    const category = getCategoryById(categories, event.categoryId);
+
+    return `
+      <tr>
+        <td>${escapeHtml(event.date || '')}</td>
+        <td>${escapeHtml(event.time || '')}</td>
+        <td>${escapeHtml(category.label)}</td>
+        <td>${escapeHtml(event.title || '')}</td>
+        <td>${escapeHtml(getPriorityLabel(event.priority))}</td>
+        <td>${escapeHtml(getStatusLabel(event.status))}</td>
+        <td>${escapeHtml(event.people || '')}</td>
+        <td>${escapeHtml(event.location || '')}</td>
+        <td>${escapeHtml(event.preparation || '')}</td>
+        <td>${escapeHtml(event.followUp || '')}</td>
+        <td>${escapeHtml(event.notes || '')}</td>
+      </tr>
+    `;
+  }).join('');
+
+  return `
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          table { border-collapse: collapse; font-family: Arial, sans-serif; }
+          th, td { border: 1px solid #d0d5dd; padding: 8px; vertical-align: top; }
+          th { background: #e8f0ff; color: #0f2f6f; }
+        </style>
+      </head>
+      <body>
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Categoria</th>
+              <th>Titulo</th>
+              <th>Prioridad</th>
+              <th>Estado</th>
+              <th>Personas</th>
+              <th>Lugar o medio</th>
+              <th>Preparar antes</th>
+              <th>Seguimiento</th>
+              <th>Notas</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </body>
+    </html>
+  `;
+}
+
+function downloadFile(file, fileName) {
+  const link = document.createElement('a');
+
+  link.href = URL.createObjectURL(file);
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(link.href);
+}
+
+function updateExportFeedback(feedback, message) {
+  if (feedback) {
+    feedback.textContent = message;
+  }
 }
 
 function buildAgendaMarkup(agendaState) {
@@ -264,14 +399,19 @@ function buildAgendaMarkup(agendaState) {
       <header class="agenda-header">
         <div>
           <p class="eyebrow">Agenda de trabajo</p>
-          <h2 id="agenda-title">Pendientes, notas, asuntos y reuniones</h2>
-          <p>Registra lo que no debes olvidar con fecha, hora, personas, seguimiento y notas.</p>
+          <h2 id="agenda-title">Eventos, llamadas y casos especiales</h2>
+          <p>Registra lo que no debes olvidar con fecha, hora, personas, seguimiento, alerta y notas importantes.</p>
         </div>
         <div class="agenda-header-actions">
           <div class="category-legend" aria-label="Categorias disponibles">
             ${buildCategoryLegendMarkup(agendaState.categories, agendaState.activeCategoryId)}
           </div>
-          <button class="secondary-action" type="button" data-agenda-today>Hoy</button>
+          <div class="agenda-export-actions" aria-label="Exportaciones de agenda">
+            <button class="secondary-action" type="button" data-agenda-today>Hoy</button>
+            <button class="secondary-action" type="button" data-agenda-export-day>Enviar dia</button>
+            <button class="secondary-action" type="button" data-agenda-export-month>Enviar mes</button>
+          </div>
+          <p class="agenda-export-feedback" data-agenda-export-feedback role="status"></p>
         </div>
       </header>
 
@@ -334,7 +474,7 @@ function buildEventFormFields(agendaState, editingEvent) {
   return `
     <label>
       <span>Que necesitas anotar</span>
-      <input name="title" type="text" value="${escapeHtml(eventTitle)}" placeholder="Pendiente, nota, asunto, reunion o evento" required>
+      <input name="title" type="text" value="${escapeHtml(eventTitle)}" placeholder="Evento, llamada, caso especial o nota importante" required>
     </label>
     <label>
       <span>Fecha</span>
@@ -385,15 +525,15 @@ function buildEventFormFields(agendaState, editingEvent) {
     </label>
     <label>
       <span>Lugar / medio</span>
-      <input name="location" type="text" value="${escapeHtml(eventLocation)}" placeholder="Oficina, llamada, mensaje, enlace o direccion">
+      <input name="location" type="text" value="${escapeHtml(eventLocation)}" placeholder="Oficina, llamada, WhatsApp, enlace o direccion">
     </label>
     <label>
       <span>Personas relacionadas</span>
-      <input name="people" type="text" value="${escapeHtml(eventPeople)}" placeholder="Nombre, area, contacto o equipo">
+      <input name="people" type="text" value="${escapeHtml(eventPeople)}" placeholder="Nombre, area, contacto o dependencia">
     </label>
     <label>
       <span>Antes / preparar</span>
-      <textarea name="preparation" rows="3" placeholder="Documentos, datos, mensajes o detalles que necesito tener listos">${escapeHtml(eventPreparation)}</textarea>
+      <textarea name="preparation" rows="3" placeholder="Documentos, datos, mensajes, fuente oficial o detalles que necesito tener listos">${escapeHtml(eventPreparation)}</textarea>
     </label>
     <label>
       <span>Seguimiento</span>

@@ -8,31 +8,31 @@
   const ALERTS_KEY = `${STORAGE_PREFIX}:alerts`;
 
   const categories = [
-    { id: 'pendiente', label: 'Pendiente', color: '#1f5eff' },
-    { id: 'nota', label: 'Nota', color: '#667085' },
-    { id: 'asunto', label: 'Asunto importante', color: '#d92d20' },
-    { id: 'reunion', label: 'Reunion', color: '#f79009' },
     { id: 'evento', label: 'Evento', color: '#17b26a' },
-    { id: 'personal', label: 'Personal', color: '#7a5af8' }
+    { id: 'llamada', label: 'Llamada', color: '#1f5eff' },
+    { id: 'caso_especial', label: 'Caso especial', color: '#d92d20' },
+    { id: 'nota_importante', label: 'Nota importante', color: '#7a5af8' },
+    { id: 'calendario_sej', label: 'Calendario SEJ', color: '#f79009' },
+    { id: 'personal', label: 'Personal', color: '#667085' }
   ];
 
   const defaultDashboard = {
     userName: 'Alejandra',
     summary: {
-      title: 'Resumen de trabajo',
+      title: 'Resumen de coordinacion',
       completed: 0,
       pending: 3,
-      nextBlock: 'Revisar agenda'
+      nextBlock: 'Revisar alertas'
     },
     priorityTasks: [
-      { id: 'task-pending', label: 'Revisar pendientes del dia', meta: 'Prioridad alta' },
-      { id: 'task-meetings', label: 'Confirmar reuniones y llamadas', meta: 'Antes de iniciar' },
-      { id: 'task-important', label: 'Marcar asuntos importantes', meta: 'Seguimiento' }
+      { id: 'task-events', label: 'Revisar eventos del dia', meta: 'Prioridad alta' },
+      { id: 'task-calls', label: 'Confirmar llamadas pendientes', meta: 'Antes de iniciar' },
+      { id: 'task-cases', label: 'Revisar casos especiales', meta: 'Seguimiento' }
     ],
     upcomingEvents: [
-      { id: 'event-review', time: '09:00', title: 'Revision de agenda' },
-      { id: 'event-follow', time: '11:30', title: 'Seguimiento de pendientes' },
-      { id: 'event-notes', time: '14:00', title: 'Captura de notas importantes' }
+      { id: 'event-review', time: '09:00', title: 'Revision de eventos y llamadas' },
+      { id: 'event-follow', time: '11:30', title: 'Seguimiento de casos especiales' },
+      { id: 'event-notes', time: '14:00', title: 'Notas importantes del dia' }
     ]
   };
 
@@ -83,7 +83,7 @@
           <div class="dashboard-hero-copy">
             <p class="eyebrow">Dashboard</p>
             <h2 id="dashboard-title">${getGreeting()}, ${escapeHtml(state.userName)}</h2>
-            <p class="dashboard-subtitle">Este es tu panorama operativo para mantener el dia ordenado.</p>
+            <p class="dashboard-subtitle">Este es tu panorama operativo para eventos, llamadas, casos especiales y notas importantes.</p>
           </div>
           <div class="dashboard-clock" aria-label="Fecha y hora actual">
             <span class="dashboard-date" data-dashboard-date></span>
@@ -100,7 +100,7 @@
             <p class="summary-note">Siguiente bloque: ${escapeHtml(state.summary.nextBlock)}</p>
           </article>
           <article class="dashboard-panel">
-            <div class="panel-header"><h3>Tareas prioritarias</h3><span>${state.priorityTasks.length}</span></div>
+            <div class="panel-header"><h3>Prioridades de coordinacion</h3><span>${state.priorityTasks.length}</span></div>
             <ul class="priority-list">
               ${state.priorityTasks.map((task) => `
                 <li>
@@ -111,7 +111,7 @@
             </ul>
           </article>
           <article class="dashboard-panel">
-            <div class="panel-header"><h3>Proximos eventos</h3><span>${state.upcomingEvents.length}</span></div>
+            <div class="panel-header"><h3>Proximas alertas de agenda</h3><span>${state.upcomingEvents.length}</span></div>
             <ol class="event-list">
               ${state.upcomingEvents.map((event) => `
                 <li><time>${escapeHtml(event.time)}</time><span>${escapeHtml(event.title)}</span></li>
@@ -134,7 +134,7 @@
 
     root.querySelector('[data-organize-day]').addEventListener('click', () => {
       writeState(DASHBOARD_KEY, { ...state, lastOrganizedAt: new Date().toISOString() });
-      root.querySelector('[data-dashboard-feedback]').textContent = 'Dia marcado para organizar. Agrega pendientes, notas, reuniones o eventos en Agenda.';
+      root.querySelector('[data-dashboard-feedback]').textContent = 'Dia marcado para organizar. Agrega eventos, llamadas, casos especiales o notas importantes en Agenda.';
     });
 
     bindFallbackBackupActions(root);
@@ -203,6 +203,8 @@
       events: []
     });
 
+    state = normalizeFallbackAgendaState(state);
+
     renderAgenda();
 
     window.addEventListener('lumen:agenda-jump-month', (event) => {
@@ -227,7 +229,7 @@
             <div>
               <p class="eyebrow">Agenda</p>
               <h2 id="agenda-title">Calendario mensual</h2>
-              <p>Organiza eventos escolares con categorias por color.</p>
+              <p>Organiza eventos, llamadas, casos especiales, notas importantes y fechas del calendario SEJ.</p>
             </div>
             <div class="agenda-header-actions">
               <div class="category-legend" aria-label="Categorias disponibles">
@@ -670,6 +672,24 @@
       writeState(key, fallback);
       return clone(fallback);
     }
+  }
+
+  function normalizeFallbackAgendaState(state) {
+    const legacyCategoryMap = {
+      pendiente: 'evento',
+      nota: 'nota_importante',
+      asunto: 'caso_especial',
+      reunion: 'evento'
+    };
+
+    return {
+      ...state,
+      categories,
+      events: (state.events || []).map((event) => ({
+        ...event,
+        categoryId: legacyCategoryMap[event.categoryId] || event.categoryId || categories[0].id
+      }))
+    };
   }
 
   function writeState(key, value) {

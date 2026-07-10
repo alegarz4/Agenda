@@ -13,9 +13,9 @@
   const PANEL_CONTENT = {
     capture: {
       title: 'Captura rapida',
-      subtitle: 'Anota cualquier pendiente, nota, asunto o evento antes de que se pierda el detalle.',
+      subtitle: 'Anota eventos, llamadas, casos especiales o notas importantes antes de que se pierda el detalle.',
       group: 'Entrada',
-      checklist: ['Escribir el tema', 'Definir si es pendiente, nota, asunto, reunion o evento', 'Agregar fecha si aplica', 'Moverlo a Agenda si necesita recordatorio']
+      checklist: ['Escribir el tema', 'Clasificarlo como evento, llamada, caso o nota importante', 'Agregar fecha y hora si aplica', 'Moverlo a Agenda si necesita alerta']
     },
     pending: {
       title: 'Pendientes',
@@ -43,9 +43,33 @@
     },
     events: {
       title: 'Eventos',
-      subtitle: 'Registra actividades programadas, fechas importantes y recordatorios.',
+      subtitle: 'Registra actividades programadas, fechas institucionales, reuniones amplias y recordatorios.',
       group: 'Agenda',
-      checklist: ['Evento identificado', 'Fecha y hora', 'Lugar o medio', 'Preparativos', 'Recordatorio en Agenda']
+      checklist: ['Evento identificado', 'Fecha y hora', 'Lugar o medio', 'Preparativos', 'Alerta en Agenda']
+    },
+    calls: {
+      title: 'Llamadas',
+      subtitle: 'Controla llamadas por realizar, mensajes por enviar y respuestas que debes registrar.',
+      group: 'Contacto',
+      checklist: ['Persona o area', 'Tema concreto', 'Telefono o medio', 'Resultado de la llamada', 'Seguimiento programado']
+    },
+    specialcases: {
+      title: 'Casos especiales',
+      subtitle: 'Conserva contexto de asuntos delicados o excepcionales sin mezclarlo con pendientes simples.',
+      group: 'Coordinacion',
+      checklist: ['Caso descrito con claridad', 'Personas involucradas', 'Riesgo o prioridad', 'Accion inmediata', 'Proxima revision']
+    },
+    importantnotes: {
+      title: 'Notas importantes',
+      subtitle: 'Datos criticos, acuerdos, instrucciones y recordatorios que no deben perderse.',
+      group: 'Memoria',
+      checklist: ['Nota registrada', 'Contexto suficiente', 'Fecha o persona relacionada', 'Marcada como importante', 'Seguimiento si aplica']
+    },
+    schoolyear: {
+      title: 'Calendario escolar SEJ',
+      subtitle: 'Espacio para registrar fechas oficiales del ciclo escolar y actualizarlo cuando la SEJ publique cambios.',
+      group: 'Calendario',
+      checklist: ['Inicio y cierre de ciclo', 'Consejos tecnicos', 'Suspensiones oficiales', 'Periodos de evaluacion', 'Vacaciones y recesos']
     },
     followup: {
       title: 'Seguimiento',
@@ -70,12 +94,6 @@
       subtitle: 'Seguimiento de respuestas, documentos, llamadas o confirmaciones pendientes.',
       group: 'Seguimiento',
       checklist: ['Que espero', 'De quien', 'Desde cuando', 'Cuando insistir', 'Resultado recibido']
-    },
-    calls: {
-      title: 'Llamadas y mensajes',
-      subtitle: 'Control de personas por contactar y mensajes importantes por enviar.',
-      group: 'Contacto',
-      checklist: ['Persona', 'Tema', 'Medio de contacto', 'Mensaje enviado', 'Respuesta registrada']
     },
     archive: {
       title: 'Archivo',

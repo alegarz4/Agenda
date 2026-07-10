@@ -5,36 +5,36 @@ const DASHBOARD_STORAGE_KEY = 'dashboard';
 const AGENDA_STORAGE_KEY = 'agenda';
 
 const WORK_CATEGORIES = [
-  { id: 'pendiente', label: 'Pendiente' },
-  { id: 'nota', label: 'Nota' },
-  { id: 'asunto', label: 'Asunto importante' },
-  { id: 'reunion', label: 'Reunion' },
   { id: 'evento', label: 'Evento' },
+  { id: 'llamada', label: 'Llamada' },
+  { id: 'caso_especial', label: 'Caso especial' },
+  { id: 'nota_importante', label: 'Nota importante' },
+  { id: 'calendario_sej', label: 'Calendario SEJ' },
   { id: 'personal', label: 'Personal' }
 ];
 
 const DEFAULT_DASHBOARD_STATE = {
   userName: 'Alejandra',
   summary: {
-    title: 'Resumen de trabajo',
+    title: 'Resumen de coordinacion',
     completed: 0,
     pending: 3,
-    nextBlock: 'Revisar agenda'
+    nextBlock: 'Revisar alertas'
   },
   priorityTasks: [
     {
-      id: 'task-pending',
-      label: 'Revisar pendientes del dia',
+      id: 'task-events',
+      label: 'Revisar eventos del dia',
       meta: 'Prioridad alta'
     },
     {
-      id: 'task-meetings',
-      label: 'Confirmar reuniones y llamadas',
+      id: 'task-calls',
+      label: 'Confirmar llamadas pendientes',
       meta: 'Antes de iniciar'
     },
     {
-      id: 'task-important',
-      label: 'Marcar asuntos importantes',
+      id: 'task-cases',
+      label: 'Revisar casos especiales',
       meta: 'Seguimiento'
     }
   ],
@@ -42,17 +42,17 @@ const DEFAULT_DASHBOARD_STATE = {
     {
       id: 'event-review',
       time: '09:00',
-      title: 'Revision de agenda'
+      title: 'Revision de eventos y llamadas'
     },
     {
       id: 'event-follow',
       time: '11:30',
-      title: 'Seguimiento de pendientes'
+      title: 'Seguimiento de casos especiales'
     },
     {
       id: 'event-notes',
       time: '14:00',
-      title: 'Captura de notas importantes'
+      title: 'Notas importantes del dia'
     }
   ]
 };
@@ -165,7 +165,7 @@ function buildDashboardMarkup(state) {
         <div class="dashboard-hero-copy">
           <p class="eyebrow">Inicio</p>
           <h2 id="dashboard-title">${getGreeting()}, ${escapeHtml(state.userName)}</h2>
-          <p class="dashboard-subtitle">Tu agenda de trabajo para pendientes, notas, asuntos importantes, reuniones y eventos.</p>
+          <p class="dashboard-subtitle">Tu agenda de coordinacion para eventos, llamadas, casos especiales, notas importantes y calendario escolar.</p>
         </div>
         <div class="dashboard-clock" aria-label="Fecha y hora actual">
           <span class="dashboard-date" data-dashboard-date></span>
@@ -179,11 +179,11 @@ function buildDashboardMarkup(state) {
           <div class="summary-metrics">
             <div>
               <strong>${state.summary.pending}</strong>
-              <span>Pendientes</span>
+              <span>Abiertos</span>
             </div>
             <div>
               <strong>${state.summary.completed}</strong>
-              <span>Completadas</span>
+              <span>Cerrados</span>
             </div>
           </div>
           <p class="summary-note">Siguiente bloque: ${escapeHtml(state.summary.nextBlock)}</p>
@@ -205,7 +205,7 @@ function buildDashboardMarkup(state) {
             </label>
             <label>
               <span>Registro</span>
-              <input name="title" type="text" placeholder="Anota lo importante aqui" required>
+              <input name="title" type="text" placeholder="Evento, llamada, caso o nota importante" required>
             </label>
             <div class="quick-capture-row">
               <label>
@@ -219,7 +219,7 @@ function buildDashboardMarkup(state) {
             </div>
             <label>
               <span>Notas</span>
-              <textarea name="notes" rows="3" placeholder="Contexto, persona relacionada, acuerdo o seguimiento"></textarea>
+              <textarea name="notes" rows="3" placeholder="Contexto, persona relacionada, acuerdo, seguimiento o fuente oficial"></textarea>
             </label>
             <button class="primary-action" type="submit">Guardar en agenda</button>
             <p class="quick-capture-feedback" data-quick-capture-feedback role="status"></p>
@@ -228,7 +228,7 @@ function buildDashboardMarkup(state) {
 
         <article class="dashboard-panel">
           <div class="panel-header">
-            <h3>Pendientes prioritarios</h3>
+            <h3>Prioridades de coordinacion</h3>
             <span>${state.priorityTasks.length}</span>
           </div>
           <ul class="priority-list">
@@ -238,7 +238,7 @@ function buildDashboardMarkup(state) {
 
         <article class="dashboard-panel">
           <div class="panel-header">
-            <h3>Proximos registros</h3>
+            <h3>Proximas alertas de agenda</h3>
             <span>${state.upcomingEvents.length}</span>
           </div>
           <ol class="event-list">
@@ -286,7 +286,7 @@ function buildTaskItemMarkup(task) {
 }
 
 function buildCategorySummary(events) {
-  return WORK_CATEGORIES.slice(0, 5).map((category) => ({
+  return WORK_CATEGORIES.map((category) => ({
     label: category.label,
     count: events.filter((event) => event.categoryId === category.id).length
   }));
@@ -305,7 +305,7 @@ function bindQuickCapture(rootElement, storage) {
 
     const formData = new FormData(form);
     const date = String(formData.get('date') || getTodayIsoDate());
-    const categoryId = String(formData.get('categoryId') || 'pendiente');
+    const categoryId = String(formData.get('categoryId') || 'evento');
     const agendaState = storage.get(AGENDA_STORAGE_KEY) || {
       selectedDate: date,
       visibleMonth: date.slice(0, 7),
@@ -319,7 +319,7 @@ function bindQuickCapture(rootElement, storage) {
       date,
       time: String(formData.get('time') || ''),
       categoryId,
-      priority: categoryId === 'asunto' ? 'alta' : 'normal',
+      priority: categoryId === 'caso_especial' || categoryId === 'nota_importante' ? 'alta' : 'normal',
       status: 'pendiente',
       reminderMinutes: 60,
       location: '',
@@ -413,7 +413,7 @@ function bindDashboardActions(rootElement, storage, state) {
     };
 
     storage.set(DASHBOARD_STORAGE_KEY, updatedState);
-    feedbackElement.textContent = 'Dia marcado para organizar. Agrega pendientes, notas, reuniones o eventos en Agenda.';
+      feedbackElement.textContent = 'Dia marcado para organizar. Agrega eventos, llamadas, casos especiales o notas importantes en Agenda.';
   });
 }
 

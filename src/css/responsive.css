@@ -189,6 +189,12 @@
     justify-content: flex-start;
   }
 
+  .agenda-export-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
   .agenda-layout {
     grid-template-columns: 1fr;
   }
@@ -228,7 +234,7 @@
 
   .category-legend {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     width: 100%;
     max-width: none;
   }
