@@ -816,8 +816,18 @@
 }
 
 .empty-alerts,
+.missed-alerts,
 .alerts-feedback {
   margin: 0;
+}
+
+.missed-alerts {
+  margin-top: var(--space-3);
+  padding: var(--space-3);
+  border: 1px solid rgba(217, 45, 32, 0.22);
+  color: #b42318;
+  background: #fff4f2;
+  font-weight: 800;
 }
 
 .alerts-feedback {

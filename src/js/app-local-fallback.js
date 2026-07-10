@@ -8,29 +8,31 @@
   const ALERTS_KEY = `${STORAGE_PREFIX}:alerts`;
 
   const categories = [
-    { id: 'coordinacion', label: 'Coordinacion', color: '#1f5eff' },
-    { id: 'docente', label: 'Docente', color: '#f79009' },
-    { id: 'personal', label: 'Personal', color: '#17b26a' },
-    { id: 'urgente', label: 'Urgente', color: '#d92d20' }
+    { id: 'pendiente', label: 'Pendiente', color: '#1f5eff' },
+    { id: 'nota', label: 'Nota', color: '#667085' },
+    { id: 'asunto', label: 'Asunto importante', color: '#d92d20' },
+    { id: 'reunion', label: 'Reunion', color: '#f79009' },
+    { id: 'evento', label: 'Evento', color: '#17b26a' },
+    { id: 'personal', label: 'Personal', color: '#7a5af8' }
   ];
 
   const defaultDashboard = {
-    userName: 'Equipo Lumen',
+    userName: 'Alejandra',
     summary: {
-      title: 'Resumen del dia',
+      title: 'Resumen de trabajo',
       completed: 0,
       pending: 3,
-      nextBlock: 'Planeacion inicial'
+      nextBlock: 'Revisar agenda'
     },
     priorityTasks: [
-      { id: 'task-lesson-plan', label: 'Revisar planeaciones del dia', meta: 'Alta prioridad' },
-      { id: 'task-attendance', label: 'Confirmar pendientes de asistencia', meta: 'Antes del receso' },
-      { id: 'task-materials', label: 'Preparar materiales de clase', meta: 'Bloque vespertino' }
+      { id: 'task-pending', label: 'Revisar pendientes del dia', meta: 'Prioridad alta' },
+      { id: 'task-meetings', label: 'Confirmar reuniones y llamadas', meta: 'Antes de iniciar' },
+      { id: 'task-important', label: 'Marcar asuntos importantes', meta: 'Seguimiento' }
     ],
     upcomingEvents: [
-      { id: 'event-staff', time: '09:00', title: 'Revision de agenda escolar' },
-      { id: 'event-follow-up', time: '11:30', title: 'Seguimiento academico' },
-      { id: 'event-planning', time: '14:00', title: 'Organizacion de actividades' }
+      { id: 'event-review', time: '09:00', title: 'Revision de agenda' },
+      { id: 'event-follow', time: '11:30', title: 'Seguimiento de pendientes' },
+      { id: 'event-notes', time: '14:00', title: 'Captura de notas importantes' }
     ]
   };
 
@@ -119,6 +121,9 @@
         </section>
         <section class="dashboard-actions" aria-label="Acciones del Dashboard">
           <button class="primary-action" type="button" data-organize-day>Organiza mi dia</button>
+          <button class="secondary-action" type="button" data-download-backup>Descargar respaldo</button>
+          <button class="secondary-action" type="button" data-restore-backup>Restaurar respaldo</button>
+          <input data-restore-backup-file type="file" accept="application/json,.json" hidden>
           <p data-dashboard-feedback role="status"></p>
         </section>
       </article>
@@ -129,8 +134,64 @@
 
     root.querySelector('[data-organize-day]').addEventListener('click', () => {
       writeState(DASHBOARD_KEY, { ...state, lastOrganizedAt: new Date().toISOString() });
-      root.querySelector('[data-dashboard-feedback]').textContent = 'Dia marcado para organizar. Las acciones detalladas se agregaran en el modulo de planeacion.';
+      root.querySelector('[data-dashboard-feedback]').textContent = 'Dia marcado para organizar. Agrega pendientes, notas, reuniones o eventos en Agenda.';
     });
+
+    bindFallbackBackupActions(root);
+  }
+
+  function bindFallbackBackupActions(root) {
+    const downloadButton = root.querySelector('[data-download-backup]');
+    const restoreButton = root.querySelector('[data-restore-backup]');
+    const restoreInput = root.querySelector('[data-restore-backup-file]');
+    const feedbackElement = root.querySelector('[data-dashboard-feedback]');
+
+    if (downloadButton) {
+      downloadButton.addEventListener('click', () => {
+        const backup = buildFallbackBackupPayload();
+        const blob = new Blob([JSON.stringify(backup, null, 2)], {
+          type: 'application/json'
+        });
+        const link = document.createElement('a');
+
+        link.href = URL.createObjectURL(blob);
+        link.download = `lumen-planner-respaldo-${dateInputValue(new Date())}.json`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(link.href);
+        feedbackElement.textContent = 'Respaldo descargado. Guarda ese archivo en tu nube o correo.';
+      });
+    }
+
+    if (restoreButton && restoreInput) {
+      restoreButton.addEventListener('click', () => {
+        restoreInput.click();
+      });
+
+      restoreInput.addEventListener('change', () => {
+        const file = restoreInput.files?.[0];
+
+        if (!file) {
+          return;
+        }
+
+        const reader = new FileReader();
+
+        reader.addEventListener('load', () => {
+          try {
+            restoreFallbackBackupPayload(String(reader.result || ''));
+            feedbackElement.textContent = 'Respaldo restaurado. Actualizando la agenda...';
+            window.setTimeout(() => window.location.reload(), 600);
+          } catch (error) {
+            feedbackElement.textContent = 'No se pudo restaurar el respaldo. Revisa que sea el archivo JSON correcto.';
+          }
+        });
+
+        reader.readAsText(file);
+        restoreInput.value = '';
+      });
+    }
   }
 
   function mountAgenda(root) {
@@ -547,6 +608,35 @@
 
     function notify(title, body) {
       if ('Notification' in window && Notification.permission === 'granted') {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.ready
+            .then((registration) => {
+              if (registration.active) {
+                registration.active.postMessage({
+                  type: 'LUMEN_SHOW_NOTIFICATION',
+                  title,
+                  body,
+                  tag: `fallback-${Date.now()}`
+                });
+                return;
+              }
+
+              registration.showNotification(title, {
+                body,
+                icon: './assets/icons/icon-192.png',
+                badge: './assets/icons/icon-192.png',
+                tag: `fallback-${Date.now()}`
+              });
+            })
+            .catch(() => {
+              new Notification(title, {
+                body,
+                icon: './assets/icons/icon.svg'
+              });
+            });
+          return;
+        }
+
         new Notification(title, {
           body,
           icon: './assets/icons/icon.svg'
@@ -584,6 +674,43 @@
 
   function writeState(key, value) {
     window.localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  function buildFallbackBackupPayload() {
+    const data = {};
+    const prefix = `${STORAGE_PREFIX}:`;
+
+    Object.keys(window.localStorage)
+      .filter((key) => key.startsWith(prefix))
+      .sort()
+      .forEach((key) => {
+        data[key] = window.localStorage.getItem(key);
+      });
+
+    return {
+      app: 'Lumen Planner',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      data
+    };
+  }
+
+  function restoreFallbackBackupPayload(rawContent) {
+    const payload = JSON.parse(rawContent);
+    const prefix = `${STORAGE_PREFIX}:`;
+
+    if (!payload || payload.app !== 'Lumen Planner' || !payload.data || typeof payload.data !== 'object') {
+      throw new Error('Invalid backup payload');
+    }
+
+    Object.entries(payload.data).forEach(([key, value]) => {
+      if (!key.startsWith(prefix) || typeof value !== 'string') {
+        return;
+      }
+
+      JSON.parse(value);
+      window.localStorage.setItem(key, value);
+    });
   }
 
   function updateClock(root) {

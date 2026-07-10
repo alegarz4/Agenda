@@ -10,9 +10,21 @@ Lumen Planner es una agenda de trabajo para anotar pendientes, notas, asuntos im
 
 - Inicio con captura rapida para guardar pendientes, notas, asuntos, reuniones y eventos.
 - Agenda mensual con filtros por tipo de registro.
-- Alertas locales para eventos proximos.
+- Alertas locales para eventos proximos, emitidas por Service Worker cuando el navegador lo permite.
+- Aviso al reabrir la app si hubo recordatorios que debieron iniciar mientras no estaba abierta.
+- Descarga y restauracion manual de respaldos en formato JSON desde el Dashboard.
 - Paneles de notas y checklists por seccion de trabajo.
 - Boton Actualizar para recargar la PWA y revisar nuevas versiones.
+
+## Respaldo de informacion
+
+La informacion vive en LocalStorage del navegador. Usa `Descargar respaldo` para guardar un archivo `.json` con tus registros, alertas, notas y configuraciones. Usa `Restaurar respaldo` para recuperar ese archivo si cambias de equipo, reinstalas el navegador o se borran datos locales.
+
+Recomendacion: descarga un respaldo una vez por semana y guardalo en tu correo o nube.
+
+## Limitaciones de notificaciones
+
+Lumen Planner no usa servidor externo. Las alertas dependen de los permisos del navegador, del sistema operativo y de que el navegador permita ejecutar la PWA en segundo plano. El Service Worker mejora la entrega, pero algunos telefonos pueden pausar notificaciones si la app fue cerrada por completo, si el ahorro de bateria la restringe o si el permiso fue bloqueado.
 
 ## GitHub Pages
 

@@ -106,6 +106,7 @@ function renderDashboard(rootElement, storage) {
   updateDateTime(rootElement);
   bindDashboardActions(rootElement, storage, dashboardState);
   bindQuickCapture(rootElement, storage);
+  bindBackupActions(rootElement, storage);
 }
 
 function loadDashboardState(storage) {
@@ -259,6 +260,13 @@ function buildDashboardMarkup(state) {
         <button class="primary-action" type="button" data-organize-day>
           Organiza mi dia
         </button>
+        <button class="secondary-action" type="button" data-download-backup>
+          Descargar respaldo
+        </button>
+        <button class="secondary-action" type="button" data-restore-backup>
+          Restaurar respaldo
+        </button>
+        <input data-restore-backup-file type="file" accept="application/json,.json" hidden>
         <p data-dashboard-feedback role="status"></p>
       </section>
     </article>
@@ -406,6 +414,106 @@ function bindDashboardActions(rootElement, storage, state) {
 
     storage.set(DASHBOARD_STORAGE_KEY, updatedState);
     feedbackElement.textContent = 'Dia marcado para organizar. Agrega pendientes, notas, reuniones o eventos en Agenda.';
+  });
+}
+
+function bindBackupActions(rootElement, storage) {
+  const downloadButton = rootElement.querySelector('[data-download-backup]');
+  const restoreButton = rootElement.querySelector('[data-restore-backup]');
+  const restoreInput = rootElement.querySelector('[data-restore-backup-file]');
+  const feedbackElement = rootElement.querySelector('[data-dashboard-feedback]');
+
+  if (downloadButton) {
+    downloadButton.addEventListener('click', () => {
+      const backup = buildBackupPayload(storage.namespace);
+      const blob = new Blob([JSON.stringify(backup, null, 2)], {
+        type: 'application/json'
+      });
+      const link = document.createElement('a');
+
+      link.href = URL.createObjectURL(blob);
+      link.download = `lumen-planner-respaldo-${getTodayIsoDate()}.json`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(link.href);
+
+      if (feedbackElement) {
+        feedbackElement.textContent = 'Respaldo descargado. Guarda ese archivo en tu nube o correo.';
+      }
+    });
+  }
+
+  if (restoreButton && restoreInput) {
+    restoreButton.addEventListener('click', () => {
+      restoreInput.click();
+    });
+
+    restoreInput.addEventListener('change', () => {
+      const file = restoreInput.files?.[0];
+
+      if (!file) {
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.addEventListener('load', () => {
+        try {
+          restoreBackupPayload(storage.namespace, String(reader.result || ''));
+
+          if (feedbackElement) {
+            feedbackElement.textContent = 'Respaldo restaurado. Actualizando la agenda...';
+          }
+
+          window.setTimeout(() => window.location.reload(), 600);
+        } catch (error) {
+          if (feedbackElement) {
+            feedbackElement.textContent = 'No se pudo restaurar el respaldo. Revisa que sea el archivo JSON correcto.';
+          }
+        }
+      });
+
+      reader.readAsText(file);
+      restoreInput.value = '';
+    });
+  }
+}
+
+function buildBackupPayload(namespace) {
+  const data = {};
+  const prefix = `${namespace}:`;
+
+  Object.keys(window.localStorage)
+    .filter((key) => key.startsWith(prefix))
+    .sort()
+    .forEach((key) => {
+      data[key] = window.localStorage.getItem(key);
+    });
+
+  return {
+    app: 'Lumen Planner',
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    data
+  };
+}
+
+function restoreBackupPayload(namespace, rawContent) {
+  const payload = JSON.parse(rawContent);
+  const prefix = `${namespace}:`;
+
+  if (!payload || payload.app !== 'Lumen Planner' || !payload.data || typeof payload.data !== 'object') {
+    throw new Error('Invalid backup payload');
+  }
+
+  Object.entries(payload.data).forEach(([key, value]) => {
+    if (!key.startsWith(prefix) || typeof value !== 'string') {
+      return;
+    }
+
+    JSON.parse(value);
+    window.localStorage.setItem(key, value);
   });
 }
 

@@ -1,7 +1,7 @@
 /* Service Worker de Lumen Planner.
    Mantiene la app disponible offline en GitHub Pages y actualiza cache por version. */
 
-const CACHE_NAME = 'lumen-planner-shell-v6';
+const CACHE_NAME = 'lumen-planner-shell-v7';
 const APP_SHELL = [
   './',
   './index.html',
@@ -66,5 +66,46 @@ self.addEventListener('fetch', (event) => {
           return networkResponse;
         })
         .catch(() => caches.match('./index.html')))
+  );
+});
+
+self.addEventListener('message', (event) => {
+  const message = event.data || {};
+
+  if (message.type !== 'LUMEN_SHOW_NOTIFICATION') {
+    return;
+  }
+
+  const title = message.title || 'Lumen Planner';
+  const options = {
+    body: message.body || '',
+    icon: './assets/icons/icon-192.png',
+    badge: './assets/icons/icon-192.png',
+    tag: message.tag || `lumen-${Date.now()}`,
+    renotify: true,
+    data: {
+      url: './index.html'
+    }
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+
+  event.waitUntil(
+    clients.matchAll({
+      includeUncontrolled: true,
+      type: 'window'
+    }).then((clientList) => {
+      const existingClient = clientList.find((client) => client.url.includes('/Agenda/'));
+
+      if (existingClient) {
+        return existingClient.focus();
+      }
+
+      return clients.openWindow('./index.html');
+    })
   );
 });

@@ -4,6 +4,7 @@
 const AGENDA_STORAGE_KEY = 'agenda';
 const ALERTS_STORAGE_KEY = 'alerts';
 const DEFAULT_ALERT_WINDOW_MINUTES = 60;
+const ALERT_HISTORY_RETENTION_DAYS = 7;
 
 function createAlertsModule() {
   let root = null;
@@ -15,6 +16,7 @@ function createAlertsModule() {
     root = rootElement;
     storage = appContext.storage;
     state = loadAlertsState(storage);
+    recoverMissedAlerts();
 
     render();
     bindGlobalEvents();
@@ -25,7 +27,7 @@ function createAlertsModule() {
     const agendaState = getAgendaState();
     const upcomingAlerts = getUpcomingAlerts(agendaState.events, state.windowMinutes);
 
-    root.innerHTML = buildAlertsMarkup(upcomingAlerts, state.windowMinutes);
+    root.innerHTML = buildAlertsMarkup(upcomingAlerts, state.windowMinutes, state.lastMissedCount || 0);
     bindAlertsEvents();
   }
 
@@ -73,6 +75,9 @@ function createAlertsModule() {
 
   function checkDueAlerts() {
     const agendaState = getAgendaState();
+
+    cleanupDismissedEventIds(agendaState.events);
+
     const dueAlerts = getDueAlerts(agendaState.events);
 
     dueAlerts.forEach((event) => {
@@ -80,12 +85,40 @@ function createAlertsModule() {
         return;
       }
 
-      showNotification('Evento proximo', `${event.title} inicia ${event.time || 'hoy'}.`);
+      showNotification('Recordatorio de agenda', `${event.title} inicia ${event.time || 'hoy'}.`, `event-${event.id}`);
       state.dismissedEventIds = [...state.dismissedEventIds, event.id];
     });
 
+    state.lastCheckedAt = new Date().toISOString();
     saveAlertsState();
     render();
+  }
+
+  function recoverMissedAlerts() {
+    const agendaState = getAgendaState();
+    const missedAlerts = getMissedAlerts(agendaState.events, state.lastCheckedAt)
+      .filter((event) => !state.dismissedEventIds.includes(event.id));
+
+    cleanupDismissedEventIds(agendaState.events);
+
+    if (missedAlerts.length) {
+      const plural = missedAlerts.length === 1 ? 'recordatorio' : 'recordatorios';
+      showNotification(
+        'Recordatorios pendientes',
+        `Tienes ${missedAlerts.length} ${plural} que ya debieron iniciar mientras la app no estaba abierta.`,
+        'lumen-missed-alerts'
+      );
+      state.dismissedEventIds = [
+        ...new Set([
+          ...state.dismissedEventIds,
+          ...missedAlerts.map((event) => event.id)
+        ])
+      ];
+    }
+
+    state.lastMissedCount = missedAlerts.length;
+    state.lastCheckedAt = new Date().toISOString();
+    saveAlertsState();
   }
 
   function requestNotificationPermission() {
@@ -100,7 +133,7 @@ function createAlertsModule() {
       render();
 
       if (permission === 'granted') {
-        showNotification('Lumen Planner', 'Recibiras alertas de tus eventos proximos.');
+        showNotification('Lumen Planner', 'Recibiras alertas de tus eventos proximos.', 'lumen-alerts-enabled');
         updateFeedback('Notificaciones activadas.');
       } else {
         updateFeedback('Las notificaciones no fueron activadas.');
@@ -108,11 +141,43 @@ function createAlertsModule() {
     });
   }
 
-  function showNotification(title, body) {
+  function showNotification(title, body, tag = `lumen-${Date.now()}`) {
     if (canSendBrowserNotification()) {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.ready
+          .then((registration) => {
+            if (registration.active) {
+              registration.active.postMessage({
+                type: 'LUMEN_SHOW_NOTIFICATION',
+                title,
+                body,
+                tag
+              });
+              return;
+            }
+
+            registration.showNotification(title, {
+              body,
+              icon: './assets/icons/icon-192.png',
+              badge: './assets/icons/icon-192.png',
+              tag,
+              renotify: true
+            });
+          })
+          .catch(() => {
+            new Notification(title, {
+              body,
+              icon: './assets/icons/icon.svg',
+              tag
+            });
+          });
+        return;
+      }
+
       new Notification(title, {
         body,
-        icon: './assets/icons/icon.svg'
+        icon: './assets/icons/icon.svg',
+        tag
       });
       return;
     }
@@ -143,6 +208,17 @@ function createAlertsModule() {
     storage.set(ALERTS_STORAGE_KEY, state);
   }
 
+  function cleanupDismissedEventIds(events) {
+    const oldestAllowedDate = new Date();
+    oldestAllowedDate.setDate(oldestAllowedDate.getDate() - ALERT_HISTORY_RETENTION_DAYS);
+
+    const validEventIds = new Set(events
+      .filter((event) => buildEventDate(event) >= oldestAllowedDate)
+      .map((event) => event.id));
+
+    state.dismissedEventIds = state.dismissedEventIds.filter((eventId) => validEventIds.has(eventId));
+  }
+
   return {
     name: 'alerts',
     mount,
@@ -161,11 +237,13 @@ function loadAlertsState(storage) {
     permission: getNotificationPermission(),
     windowMinutes: DEFAULT_ALERT_WINDOW_MINUTES,
     dismissedEventIds: [],
+    lastCheckedAt: null,
+    lastMissedCount: 0,
     ...storedState
   };
 }
 
-function buildAlertsMarkup(alerts, selectedWindowMinutes) {
+function buildAlertsMarkup(alerts, selectedWindowMinutes, missedCount) {
   return `
     <article class="alerts" aria-labelledby="alerts-title">
       <header class="alerts-header">
@@ -196,6 +274,7 @@ function buildAlertsMarkup(alerts, selectedWindowMinutes) {
           <span>${alerts.length}</span>
         </div>
         ${buildAlertsListMarkup(alerts)}
+        ${missedCount ? `<p class="missed-alerts">Tienes ${missedCount} recordatorio${missedCount === 1 ? '' : 's'} que ya debieron iniciar mientras la app no estaba abierta.</p>` : ''}
         <p class="alerts-feedback" data-alerts-feedback role="status"></p>
       </section>
     </article>
@@ -264,6 +343,22 @@ function getDueAlerts(events) {
       const reminderWindow = getEventReminderWindow(event, 1);
       return minutesUntil >= 0 && minutesUntil <= Math.max(1, reminderWindow);
     });
+}
+
+function getMissedAlerts(events, lastCheckedAt) {
+  const now = new Date();
+  const fallbackStart = new Date(now);
+  fallbackStart.setHours(fallbackStart.getHours() - 12);
+  const lastCheckedDate = lastCheckedAt ? new Date(lastCheckedAt) : fallbackStart;
+
+  return events
+    .map((event) => ({
+      ...event,
+      startsAt: buildEventDate(event)
+    }))
+    .filter((event) => event.startsAt > lastCheckedDate && event.startsAt < now)
+    .filter((event) => !event.status || event.status !== 'realizado')
+    .filter((event) => !event.id || !event.dismissed);
 }
 
 function getEventReminderWindow(event, fallbackMinutes) {
