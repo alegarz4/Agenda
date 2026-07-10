@@ -1,7 +1,7 @@
 /* Service Worker de Lumen Planner v2.
    Mantiene la agenda disponible offline en GitHub Pages. */
 
-const CACHE_NAME = 'lumen-planner-v2-shell-v1';
+const CACHE_NAME = 'lumen-planner-v2-shell-v2';
 const APP_SHELL = [
   './',
   './index.html',

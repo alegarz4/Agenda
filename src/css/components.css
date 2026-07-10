@@ -14,7 +14,8 @@
   place-items: center;
   border-radius: 13px;
   color: #ffffff;
-  background: var(--color-primary);
+  background: linear-gradient(135deg, #35cbb9, #0c8d7f);
+  box-shadow: 0 12px 24px rgba(43, 184, 168, 0.28);
   font-weight: 900;
 }
 
@@ -51,11 +52,19 @@
   color: var(--color-muted);
   font-size: 0.88rem;
   font-weight: 800;
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
 .app-nav a.is-active {
-  color: #ffffff;
-  background: var(--color-primary);
+  color: #064943;
+  background: linear-gradient(135deg, #d7fbf4, #c8f1e5);
+  box-shadow: inset 0 0 0 1px rgba(8, 127, 115, 0.13);
+}
+
+.app-nav a:hover {
+  color: var(--color-primary-strong);
+  background: rgba(217, 248, 243, 0.72);
+  transform: translateY(-1px);
 }
 
 .hero,
@@ -67,6 +76,7 @@
   border-radius: var(--radius-lg);
   background: var(--color-surface);
   box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
 }
 
 .hero {
@@ -75,6 +85,9 @@
   gap: var(--space-4);
   align-items: center;
   padding: var(--space-6);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 251, 248, 0.84)),
+    linear-gradient(90deg, rgba(217, 248, 243, 0.85), rgba(234, 223, 255, 0.58));
 }
 
 .hero h1 {
@@ -121,7 +134,8 @@
   border: 0;
   padding: 0 var(--space-5);
   color: #ffffff;
-  background: var(--color-primary);
+  background: linear-gradient(135deg, #2bb8a8, #087f73);
+  box-shadow: 0 12px 24px rgba(43, 184, 168, 0.25);
 }
 
 .secondary-button,
@@ -129,7 +143,7 @@
 .danger-button {
   padding: 0 var(--space-4);
   border: 1px solid var(--color-border);
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.82);
 }
 
 .secondary-button {
@@ -149,17 +163,20 @@
   width: 42px;
   place-items: center;
   border: 1px solid var(--color-border);
-  color: var(--color-muted);
-  background: #ffffff;
+  color: var(--color-primary-strong);
+  background: var(--color-primary-soft);
 }
 
 .summary-card {
   padding: var(--space-4);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(221, 248, 234, 0.58));
 }
 
 .summary-card strong {
   display: block;
   margin-bottom: var(--space-1);
+  color: var(--color-primary-strong);
   font-size: 1.7rem;
   line-height: 1;
 }
@@ -218,7 +235,15 @@ textarea {
   border-radius: var(--radius-sm);
   padding: 0.75rem 0.85rem;
   color: var(--color-text);
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(43, 184, 168, 0.14);
+  outline: 0;
 }
 
 textarea {
@@ -247,7 +272,8 @@ textarea {
   border: 1px solid var(--color-border);
   border-left: 6px solid var(--type-color, var(--color-primary));
   border-radius: var(--radius-md);
-  background: var(--color-surface);
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.96), rgba(240, 251, 248, 0.72));
 }
 
 .record-item strong,
@@ -278,8 +304,8 @@ textarea {
   min-height: 30px;
   padding: 0 0.65rem;
   border-radius: 999px;
-  color: var(--color-muted);
-  background: var(--color-surface-soft);
+  color: #15504b;
+  background: rgba(217, 248, 243, 0.82);
   font-size: 0.78rem;
   font-weight: 850;
 }
@@ -330,18 +356,19 @@ textarea {
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
   color: var(--color-text);
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.9);
   text-align: left;
 }
 
 .calendar-day.is-muted {
-  color: #98a2b3;
-  background: #f8fafc;
+  color: #9bb0b0;
+  background: rgba(247, 251, 250, 0.72);
 }
 
 .calendar-day.is-selected {
   border-color: var(--color-primary);
-  box-shadow: inset 0 0 0 2px rgba(36, 87, 214, 0.18);
+  background: linear-gradient(135deg, #ecfffb, #e7f8ee);
+  box-shadow: inset 0 0 0 2px rgba(43, 184, 168, 0.22);
 }
 
 .calendar-dots {
@@ -364,7 +391,7 @@ textarea {
   border: 1px dashed var(--color-border);
   border-radius: var(--radius-md);
   color: var(--color-muted);
-  background: var(--color-surface-soft);
+  background: rgba(240, 251, 248, 0.72);
 }
 
 .record-dialog {
@@ -373,11 +400,12 @@ textarea {
   border: 0;
   border-radius: var(--radius-lg);
   padding: 0;
-  box-shadow: 0 22px 60px rgba(21, 32, 51, 0.24);
+  background: linear-gradient(135deg, #ffffff, #f3fffc);
+  box-shadow: 0 22px 60px rgba(22, 78, 73, 0.24);
 }
 
 .record-dialog::backdrop {
-  background: rgba(21, 32, 51, 0.42);
+  background: rgba(22, 48, 51, 0.38);
 }
 
 .record-form {

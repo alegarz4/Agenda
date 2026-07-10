@@ -28,12 +28,12 @@ import {
 } from './utils/date.js';
 
 const TYPES = {
-  evento: { label: 'Evento', color: '#159a5b' },
-  llamada: { label: 'Llamada', color: '#2457d6' },
-  caso: { label: 'Caso especial', color: '#c9352b' },
-  nota: { label: 'Nota importante', color: '#7a4fd6' },
-  sej: { label: 'Calendario SEJ', color: '#b66b00' },
-  personal: { label: 'Personal', color: '#667085' }
+  evento: { label: 'Evento', color: '#2bb8a8' },
+  llamada: { label: 'Llamada', color: '#62b6cb' },
+  caso: { label: 'Caso especial', color: '#e87f8a' },
+  nota: { label: 'Nota importante', color: '#a78bfa' },
+  sej: { label: 'Calendario SEJ', color: '#f2b36d' },
+  personal: { label: 'Personal', color: '#8fb9a8' }
 };
 
 const DEFAULT_STATE = {

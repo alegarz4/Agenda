@@ -1,7 +1,9 @@
 /* Ajustes para celular Android y tablets. */
 @media (max-width: 760px) {
   body {
-    background: #ffffff;
+    background:
+      radial-gradient(circle at top left, rgba(139, 215, 199, 0.46), transparent 22rem),
+      linear-gradient(180deg, #f3fffc, #f8f4ff);
   }
 
   .app-shell {
@@ -14,7 +16,8 @@
     grid-template-columns: minmax(0, 1fr) auto;
     border-width: 0 0 1px;
     border-radius: 0;
-    box-shadow: none;
+    background: rgba(255, 255, 255, 0.88);
+    box-shadow: 0 8px 22px rgba(33, 107, 100, 0.08);
   }
 
   .brand-mark {
@@ -50,7 +53,9 @@
     padding: var(--space-2) var(--space-3) calc(var(--space-2) + env(safe-area-inset-bottom));
     border-width: 1px 0 0;
     border-radius: 0;
-    box-shadow: 0 -12px 28px rgba(21, 32, 51, 0.12);
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 -12px 28px rgba(33, 107, 100, 0.14);
+    backdrop-filter: blur(16px);
   }
 
   .app-nav a {
@@ -68,7 +73,7 @@
   .calendar-panel,
   .list-panel {
     border-radius: var(--radius-md);
-    box-shadow: 0 8px 22px rgba(21, 32, 51, 0.08);
+    box-shadow: 0 10px 26px rgba(33, 107, 100, 0.11);
   }
 
   .hero {

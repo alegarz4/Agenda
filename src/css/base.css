@@ -12,7 +12,10 @@ body {
   min-height: 100vh;
   margin: 0;
   color: var(--color-text);
-  background: var(--color-bg);
+  background:
+    radial-gradient(circle at top left, rgba(139, 215, 199, 0.52), transparent 34rem),
+    radial-gradient(circle at top right, rgba(234, 223, 255, 0.72), transparent 28rem),
+    linear-gradient(135deg, var(--color-bg), var(--color-bg-alt));
   font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
   line-height: 1.5;
 }

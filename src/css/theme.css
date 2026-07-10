@@ -1,18 +1,25 @@
 /* Variables visuales centrales de Lumen Planner. */
 :root {
   color-scheme: light;
-  --color-bg: #f4f6fb;
-  --color-surface: #ffffff;
-  --color-surface-soft: #f8fafc;
-  --color-text: #152033;
-  --color-muted: #667085;
-  --color-border: #d9e1ef;
-  --color-primary: #2457d6;
-  --color-primary-strong: #183f9d;
-  --color-danger: #c9352b;
-  --color-warning: #b66b00;
-  --color-success: #087443;
-  --shadow-card: 0 12px 28px rgba(21, 32, 51, 0.08);
+  --color-bg: #eefbf8;
+  --color-bg-alt: #f7f1ff;
+  --color-surface: rgba(255, 255, 255, 0.88);
+  --color-surface-solid: #ffffff;
+  --color-surface-soft: #f0fbf8;
+  --color-text: #163033;
+  --color-muted: #5e7376;
+  --color-border: #cdebe5;
+  --color-primary: #2bb8a8;
+  --color-primary-strong: #087f73;
+  --color-primary-soft: #d9f8f3;
+  --color-accent: #8bd7c7;
+  --color-lilac: #eadfff;
+  --color-peach: #ffe9df;
+  --color-mint: #ddf8ea;
+  --color-danger: #d7656a;
+  --color-warning: #c98628;
+  --color-success: #178a62;
+  --shadow-card: 0 18px 42px rgba(33, 107, 100, 0.13);
   --radius-sm: 10px;
   --radius-md: 14px;
   --radius-lg: 18px;
