@@ -1,7 +1,12 @@
 /* Ajustes responsivos enfocados en Android y pantallas estrechas. */
 @media (max-width: 600px) {
+  body {
+    background: #f5f7fb;
+  }
+
   .app-shell {
-    padding: var(--space-2);
+    width: 100%;
+    padding: 0 0 calc(5.75rem + env(safe-area-inset-bottom));
   }
 
   .app-header {
@@ -9,16 +14,26 @@
   }
 
   .planner-shell {
-    padding: var(--space-3) var(--space-2);
+    min-height: 100svh;
+    padding: 0;
   }
 
   .planner-tabs {
-    padding: 0 var(--space-2);
+    gap: 0.4rem;
+    padding: var(--space-2) var(--space-3);
+    scroll-padding-inline: var(--space-3);
   }
 
   .planner-tabs button {
-    min-width: 82px;
-    font-size: 0.65rem;
+    min-width: max-content;
+    min-height: 42px;
+    padding: 0.55rem 0.82rem;
+    border: 1px solid rgba(37, 99, 235, 0.14);
+    border-radius: 999px;
+    background: #ffffff;
+    box-shadow: 0 6px 14px rgba(23, 32, 51, 0.08);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
   }
 
   .planner-panel-meta {
@@ -27,8 +42,11 @@
   }
 
   .planner-case {
-    padding: var(--space-3);
-    border-radius: 18px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
   }
 
   .planner-side-tabs,
@@ -37,34 +55,59 @@
   }
 
   .planner-book {
+    display: block;
     min-height: auto;
-    border-radius: 12px;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
   }
 
   .planner-brand {
-    grid-template-columns: auto minmax(0, 1fr);
-    padding: var(--space-4);
+    position: sticky;
+    top: 0;
+    z-index: 8;
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: var(--space-3);
+    padding: calc(var(--space-3) + env(safe-area-inset-top)) var(--space-4) var(--space-3);
+    border-bottom: 1px solid rgba(23, 32, 51, 0.08);
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(14px);
+  }
+
+  .brand-mark {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  .brand-copy h1 {
+    font-size: 1.15rem;
+  }
+
+  .brand-copy p {
+    font-size: 0.78rem;
   }
 
   .refresh-action {
     grid-column: 1 / -1;
     width: 100%;
+    min-height: 42px;
   }
 
   .planner-pages {
     grid-template-columns: 1fr;
-    padding: 0 var(--space-3) var(--space-3);
-  }
-
-  .planner-page {
     padding: var(--space-3);
   }
 
-  .planner-page-left,
-  .planner-page-right {
-    border-right: 0;
-    padding-left: var(--space-3);
-    padding-right: var(--space-3);
+  .planner-page {
+    gap: var(--space-3);
+    padding: 0;
+    background: transparent;
+  }
+
+  .planner-page-full {
+    width: 100%;
   }
 
   .empty-state {
@@ -75,14 +118,19 @@
   .dashboard-hero {
     grid-template-columns: 1fr;
     padding: var(--space-4);
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 10px 24px rgba(23, 32, 51, 0.08);
   }
 
   .dashboard-hero-copy h2 {
-    font-size: 1.55rem;
+    font-size: 1.35rem;
   }
 
   .dashboard-clock {
+    display: grid;
     min-width: 0;
+    border-radius: 12px;
   }
 
   .dashboard-grid {
@@ -95,8 +143,16 @@
   }
 
   .summary-card,
-  .dashboard-panel {
+  .dashboard-panel,
+  .quick-capture-card,
+  .calendar-card,
+  .agenda-panel,
+  .alerts-panel,
+  .planner-panel {
     padding: var(--space-4);
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 10px 24px rgba(23, 32, 51, 0.08);
   }
 
   .dashboard-actions {
@@ -106,12 +162,25 @@
 
   .primary-action {
     width: 100%;
+    min-height: 48px;
+  }
+
+  .panel-header {
+    border-radius: 14px 14px 0 0;
+  }
+
+  .work-summary-strip article {
+    border-radius: 12px;
+    background: #ffffff;
   }
 
   /* Agenda se apila en Android para priorizar lectura y tacto. */
   .agenda-header {
     grid-template-columns: 1fr;
     padding: var(--space-4);
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 10px 24px rgba(23, 32, 51, 0.08);
   }
 
   .agenda-header-actions,
@@ -131,12 +200,19 @@
 
   .calendar-grid,
   .calendar-weekdays {
-    gap: 4px;
+    gap: 3px;
   }
 
   .calendar-day {
-    min-height: 52px;
-    padding: 0.35rem;
+    min-height: 46px;
+    padding: 0.28rem;
+    border-radius: 10px;
+    font-size: 0.78rem;
+  }
+
+  .event-dots i {
+    width: 6px;
+    height: 6px;
   }
 
   .form-actions,
@@ -147,6 +223,20 @@
 
   .secondary-action {
     width: 100%;
+    min-height: 46px;
+  }
+
+  .category-legend {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    max-width: none;
+  }
+
+  .category-legend button {
+    justify-content: center;
+    min-height: 38px;
+    padding-inline: var(--space-2);
   }
 
   /* Alertas se apila para mantener controles comodos en Android. */
@@ -168,6 +258,29 @@
 
   .alerts-list li {
     grid-template-columns: 1fr;
+  }
+
+  .planner-tabs-bottom {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    gap: 0.35rem;
+    padding: var(--space-2) var(--space-3) calc(var(--space-2) + env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(23, 32, 51, 0.1);
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 -12px 26px rgba(23, 32, 51, 0.12);
+  }
+
+  .planner-tabs-bottom button {
+    min-height: 42px;
+    border-radius: 999px;
+  }
+
+  .planner-tabs-top {
+    background: #f5f7fb;
   }
 }
 

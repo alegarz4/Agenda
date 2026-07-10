@@ -1,7 +1,7 @@
 /* Service Worker de Lumen Planner.
    Mantiene la app disponible offline en GitHub Pages y actualiza cache por version. */
 
-const CACHE_NAME = 'lumen-planner-shell-v7';
+const CACHE_NAME = 'lumen-planner-shell-v8';
 const APP_SHELL = [
   './',
   './index.html',
