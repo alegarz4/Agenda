@@ -1,7 +1,7 @@
-/* Service Worker de Lumen Planner.
-   Mantiene la app disponible offline en GitHub Pages y actualiza cache por version. */
+/* Service Worker de Lumen Planner v2.
+   Mantiene la agenda disponible offline en GitHub Pages. */
 
-const CACHE_NAME = 'lumen-planner-shell-v9';
+const CACHE_NAME = 'lumen-planner-v2-shell-v1';
 const APP_SHELL = [
   './',
   './index.html',
@@ -15,17 +15,9 @@ const APP_SHELL = [
   './src/css/components.css',
   './src/css/responsive.css',
   './src/js/app.js',
-  './src/js/app-local-fallback.js',
-  './src/js/planner-tabs.js',
-  './src/js/config/app-config.js',
   './src/js/core/pwa.js',
-  './src/js/core/router.js',
   './src/js/core/storage.js',
-  './src/js/modules/agenda/index.js',
-  './src/js/modules/alerts/index.js',
-  './src/js/modules/dashboard/index.js',
-  './src/js/modules/planner/index.js',
-  './src/js/modules/settings/index.js'
+  './src/js/utils/date.js'
 ];
 
 self.addEventListener('install', (event) => {
@@ -57,38 +49,16 @@ self.addEventListener('fetch', (event) => {
     caches.match(event.request)
       .then((cachedResponse) => cachedResponse || fetch(event.request)
         .then((networkResponse) => {
-          const responseClone = networkResponse.clone();
+          const clone = networkResponse.clone();
 
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseClone);
+            cache.put(event.request, clone);
           });
 
           return networkResponse;
         })
         .catch(() => caches.match('./index.html')))
   );
-});
-
-self.addEventListener('message', (event) => {
-  const message = event.data || {};
-
-  if (message.type !== 'LUMEN_SHOW_NOTIFICATION') {
-    return;
-  }
-
-  const title = message.title || 'Lumen Planner';
-  const options = {
-    body: message.body || '',
-    icon: './assets/icons/icon-192.png',
-    badge: './assets/icons/icon-192.png',
-    tag: message.tag || `lumen-${Date.now()}`,
-    renotify: true,
-    data: {
-      url: './index.html'
-    }
-  };
-
-  event.waitUntil(self.registration.showNotification(title, options));
 });
 
 self.addEventListener('notificationclick', (event) => {
@@ -99,13 +69,13 @@ self.addEventListener('notificationclick', (event) => {
       includeUncontrolled: true,
       type: 'window'
     }).then((clientList) => {
-      const existingClient = clientList.find((client) => client.url.includes('/Agenda/'));
+      const currentClient = clientList.find((client) => client.url.includes('/Agenda/'));
 
-      if (existingClient) {
-        return existingClient.focus();
+      if (currentClient) {
+        return currentClient.focus();
       }
 
-      return clients.openWindow('./index.html');
+      return clients.openWindow('./index.html#alertas');
     })
   );
 });

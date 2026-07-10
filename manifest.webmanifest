@@ -2,15 +2,15 @@
   "id": "./",
   "name": "Lumen Planner",
   "short_name": "Lumen",
-  "description": "PWA para agenda de coordinacion, eventos, llamadas, casos especiales, notas importantes, calendario escolar y alertas.",
+  "description": "Agenda de coordinacion para eventos, llamadas, casos especiales, notas importantes, calendario escolar y alertas.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#fffdf8",
-  "theme_color": "#1f5eff",
+  "background_color": "#f4f6fb",
+  "theme_color": "#2457d6",
   "lang": "es-MX",
-  "categories": ["education", "productivity", "utilities"],
+  "categories": ["productivity", "utilities", "education"],
   "icons": [
     {
       "src": "./assets/icons/icon.svg",
@@ -46,10 +46,10 @@
       ]
     },
     {
-      "name": "Alertas",
-      "short_name": "Alertas",
-      "description": "Revisar eventos proximos",
-      "url": "./index.html#alerts",
+      "name": "Nuevo registro",
+      "short_name": "Nuevo",
+      "description": "Abrir Lumen Planner para capturar un registro",
+      "url": "./index.html#inicio",
       "icons": [
         {
           "src": "./assets/icons/icon-192.png",

@@ -1,22 +1,20 @@
 <!doctype html>
-<!-- Documento principal de Lumen Planner preparado para publicarse en GitHub Pages. -->
+<!-- Lumen Planner: PWA estatica para agenda personal de coordinacion. -->
 <html lang="es">
 <head>
-  <!-- Metadatos base para HTML5, PWA y visualizacion correcta en Android. -->
+  <!-- Metadatos base para Android, GitHub Pages e instalacion PWA. -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#1f5eff">
+  <meta name="theme-color" content="#2457d6">
   <meta name="description" content="Lumen Planner, agenda de coordinacion para eventos, llamadas, casos especiales, notas importantes, calendario escolar y alertas.">
 
-  <!-- Titulo visible en navegador e instalacion PWA. -->
+  <!-- Identidad de la aplicacion. -->
   <title>Lumen Planner</title>
-
-  <!-- Manifest e icono base para instalacion como Progressive Web App. -->
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./assets/icons/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
 
-  <!-- Hojas de estilo separadas por responsabilidad. -->
+  <!-- Estilos separados por responsabilidad. -->
   <link rel="stylesheet" href="./src/css/theme.css">
   <link rel="stylesheet" href="./src/css/base.css">
   <link rel="stylesheet" href="./src/css/layout.css">
@@ -24,116 +22,144 @@
   <link rel="stylesheet" href="./src/css/responsive.css">
 </head>
 <body>
-  <!-- Contenedor raiz con apariencia de agenda digital horizontal. -->
-  <div id="app" class="app-shell planner-shell" data-app-root>
-    <!-- Pestañas superiores funcionales para herramientas rapidas. -->
-    <nav class="planner-tabs planner-tabs-top" aria-label="Secciones rapidas">
-      <button type="button" data-planner-tab="capture">Captura</button>
-      <button type="button" data-planner-tab="events">Eventos</button>
-      <button type="button" data-planner-tab="calls">Llamadas</button>
-      <button type="button" data-planner-tab="specialcases">Casos</button>
-      <button type="button" data-planner-tab="importantnotes">Notas importantes</button>
-      <button type="button" data-planner-tab="schoolyear">Calendario SEJ</button>
-      <button type="button" data-planner-tab="followup">Seguimiento</button>
-    </nav>
+  <!-- Contenedor principal controlado por JavaScript. -->
+  <div class="app-shell" data-app-shell>
+    <!-- Encabezado fijo de marca, fecha y acciones globales. -->
+    <header class="app-header">
+      <a class="brand" href="#inicio" aria-label="Ir al inicio de Lumen Planner">
+        <span class="brand-mark" aria-hidden="true">LP</span>
+        <span>
+          <strong>Lumen Planner</strong>
+          <small>Agenda de coordinacion</small>
+        </span>
+      </a>
 
-    <div class="planner-case">
-      <!-- Pestañas laterales funcionales para paginas personalizadas. -->
-      <aside class="planner-side-tabs planner-side-tabs-left" aria-label="Paginas personalizadas">
-        <button type="button" data-planner-tab="today">Hoy</button>
-        <button type="button" data-planner-tab="urgent">Urgente</button>
-        <button type="button" data-planner-tab="waiting">Espera</button>
-        <button type="button" data-planner-tab="importantnotes">Notas</button>
-        <button type="button" data-planner-tab="archive">Archivo</button>
-      </aside>
-
-      <!-- Pestañas laterales funcionales para saltar a meses de Agenda. -->
-      <aside class="planner-side-tabs planner-side-tabs-right" aria-label="Meses de agenda">
-        <button type="button" data-planner-tab="year">Año</button>
-        <button type="button" data-planner-month="0">Ene</button>
-        <button type="button" data-planner-month="1">Feb</button>
-        <button type="button" data-planner-month="2">Mar</button>
-        <button type="button" data-planner-month="3">Abr</button>
-        <button type="button" data-planner-month="4">May</button>
-        <button type="button" data-planner-month="5">Jun</button>
-        <button type="button" data-planner-month="6">Jul</button>
-        <button type="button" data-planner-month="7">Ago</button>
-        <button type="button" data-planner-month="8">Sep</button>
-        <button type="button" data-planner-month="9">Oct</button>
-        <button type="button" data-planner-month="10">Nov</button>
-        <button type="button" data-planner-month="11">Dic</button>
-      </aside>
-
-      <!-- Libro central de dos paginas. -->
-      <div class="planner-book">
-        <!-- Encabezado de marca integrado dentro de la pagina izquierda. -->
-        <header class="app-header planner-brand" data-app-header>
-          <div class="brand-mark" aria-hidden="true">LP</div>
-          <div class="brand-copy">
-            <h1>Lumen Planner</h1>
-            <p>Agenda de coordinacion, eventos y alertas</p>
-          </div>
-          <button class="refresh-action" type="button" data-refresh-app aria-label="Actualizar la agenda">
-            Actualizar
-          </button>
-        </header>
-
-        <!-- Anillas centrales de la agenda. -->
-        <div class="planner-rings" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-
-        <!-- Area principal compacta: cada pestaña muestra solo una vista completa. -->
-        <main class="app-main planner-pages" id="main-content" tabindex="-1">
-          <section class="planner-page planner-page-full" data-planner-view="dashboard" aria-label="Inicio">
-            <!-- Punto de montaje exclusivo para el Dashboard. -->
-            <section id="dashboard-root" data-dashboard-root aria-live="polite"></section>
-          </section>
-
-          <section class="planner-page planner-page-full" data-planner-view="workspace" aria-label="Area de trabajo" hidden>
-            <!-- Panel funcional para pestañas superiores, laterales e inferiores. -->
-            <section class="planner-workspace" data-planner-workspace aria-live="polite"></section>
-          </section>
-
-          <section class="planner-page planner-page-full" data-planner-view="agenda" aria-label="Agenda" hidden>
-            <!-- Punto de montaje exclusivo para el modulo Agenda. -->
-            <section id="agenda-root" data-agenda-root aria-live="polite"></section>
-          </section>
-
-          <section class="planner-page planner-page-full" data-planner-view="alerts" aria-label="Alertas" hidden>
-            <!-- Punto de montaje exclusivo para el modulo Alertas. -->
-            <section id="alerts-root" data-alerts-root aria-live="polite"></section>
-          </section>
-        </main>
+      <div class="header-status" aria-live="polite">
+        <span data-current-date></span>
+        <strong data-current-time></strong>
       </div>
-    </div>
 
-    <!-- Pestañas inferiores funcionales de areas de trabajo. -->
-    <nav class="planner-tabs planner-tabs-bottom" aria-label="Areas del planner">
-      <button type="button" data-planner-tab="dashboard">Inicio</button>
-      <button type="button" data-planner-tab="events">Eventos</button>
-      <button type="button" data-planner-tab="calls">Llamadas</button>
-      <button type="button" data-planner-tab="specialcases">Casos</button>
-      <button type="button" data-planner-tab="importantnotes">Notas</button>
-      <button type="button" data-planner-tab="agenda">Agenda</button>
-      <button type="button" data-planner-tab="alerts">Alertas</button>
+      <button class="ghost-button" type="button" data-refresh-app>Actualizar</button>
+    </header>
+
+    <!-- Navegacion principal: cada pestana corresponde a una funcion real. -->
+    <nav class="app-nav" aria-label="Secciones de Lumen Planner">
+      <a href="#inicio" data-nav-link="inicio">Inicio</a>
+      <a href="#agenda" data-nav-link="agenda">Agenda</a>
+      <a href="#eventos" data-nav-link="eventos">Eventos</a>
+      <a href="#llamadas" data-nav-link="llamadas">Llamadas</a>
+      <a href="#casos" data-nav-link="casos">Casos</a>
+      <a href="#notas" data-nav-link="notas">Notas</a>
+      <a href="#sej" data-nav-link="sej">SEJ</a>
+      <a href="#alertas" data-nav-link="alertas">Alertas</a>
+      <a href="#respaldo" data-nav-link="respaldo">Respaldo</a>
     </nav>
+
+    <!-- Punto de montaje para vistas renderizadas desde modulos ES6. -->
+    <main class="app-main" id="main-content" data-view-root tabindex="-1"></main>
   </div>
 
-  <!-- Punto de entrada ES6 de la aplicacion. -->
+  <!-- Dialogo unico para crear y editar registros de agenda. -->
+  <dialog class="record-dialog" data-record-dialog>
+    <form method="dialog" class="record-form" data-record-form>
+      <header class="dialog-header">
+        <div>
+          <p class="eyebrow">Registro</p>
+          <h2 data-dialog-title>Nuevo registro</h2>
+        </div>
+        <button class="icon-button" type="button" data-close-dialog aria-label="Cerrar">x</button>
+      </header>
+
+      <input type="hidden" name="id">
+
+      <label>
+        <span>Tipo</span>
+        <select name="type" required>
+          <option value="evento">Evento</option>
+          <option value="llamada">Llamada</option>
+          <option value="caso">Caso especial</option>
+          <option value="nota">Nota importante</option>
+          <option value="sej">Calendario SEJ</option>
+          <option value="personal">Personal</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Titulo</span>
+        <input name="title" type="text" placeholder="Ej. Llamar a supervisión, reunión, caso pendiente" required>
+      </label>
+
+      <div class="form-grid">
+        <label>
+          <span>Fecha</span>
+          <input name="date" type="date" required>
+        </label>
+        <label>
+          <span>Hora</span>
+          <input name="time" type="time">
+        </label>
+      </div>
+
+      <div class="form-grid">
+        <label>
+          <span>Prioridad</span>
+          <select name="priority">
+            <option value="normal">Normal</option>
+            <option value="alta">Alta</option>
+            <option value="critica">Critica</option>
+          </select>
+        </label>
+        <label>
+          <span>Estado</span>
+          <select name="status">
+            <option value="pendiente">Pendiente</option>
+            <option value="en_proceso">En proceso</option>
+            <option value="espera">En espera</option>
+            <option value="cerrado">Cerrado</option>
+          </select>
+        </label>
+      </div>
+
+      <label>
+        <span>Persona, area o dependencia</span>
+        <input name="person" type="text" placeholder="Nombre, area, dependencia o contacto">
+      </label>
+
+      <label>
+        <span>Lugar o medio</span>
+        <input name="place" type="text" placeholder="Oficina, telefono, WhatsApp, enlace, escuela">
+      </label>
+
+      <label>
+        <span>Alerta</span>
+        <select name="reminderMinutes">
+          <option value="0">Sin alerta</option>
+          <option value="15">15 minutos antes</option>
+          <option value="30">30 minutos antes</option>
+          <option value="60">1 hora antes</option>
+          <option value="120">2 horas antes</option>
+          <option value="1440">1 dia antes</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Seguimiento</span>
+        <textarea name="followUp" rows="3" placeholder="Que debo confirmar, enviar, revisar o cerrar despues"></textarea>
+      </label>
+
+      <label>
+        <span>Notas importantes</span>
+        <textarea name="notes" rows="5" placeholder="Contexto, acuerdos, indicaciones, fuente oficial o datos que no debo olvidar"></textarea>
+      </label>
+
+      <footer class="dialog-actions">
+        <button class="secondary-button" type="button" data-close-dialog>Cancelar</button>
+        <button class="primary-button" type="submit">Guardar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <!-- La app funciona en GitHub Pages con modulos ES6. -->
   <script type="module" src="./src/js/app.js"></script>
-
-  <!-- Respaldo para abrir el archivo directamente cuando el navegador bloquea modulos ES6 en file://. -->
-  <script src="./src/js/app-local-fallback.js"></script>
-
-  <!-- Control funcional de pestañas del planner para modo modular y modo local. -->
-  <script src="./src/js/planner-tabs.js"></script>
 </body>
 </html>

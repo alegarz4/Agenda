@@ -1,21 +1,19 @@
-/* Normalizacion ligera y estilos base para todos los navegadores modernos. */
+/* Normalizacion base para que la PWA sea consistente en navegador y Android. */
 * {
   box-sizing: border-box;
 }
 
 html {
   min-height: 100%;
-  background: #f5eef2;
+  scroll-behavior: smooth;
 }
 
 body {
   min-height: 100vh;
   margin: 0;
   color: var(--color-text);
-  background:
-    linear-gradient(135deg, rgba(255, 216, 180, 0.55), rgba(245, 188, 221, 0.44) 45%, rgba(186, 238, 224, 0.44)),
-    #f6eef4;
-  font-family: var(--font-sans);
+  background: var(--color-bg);
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
   line-height: 1.5;
 }
 
@@ -26,8 +24,34 @@ textarea {
   font: inherit;
 }
 
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
 img,
 svg {
   display: block;
   max-width: 100%;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(36, 87, 214, 0.32);
+  outline-offset: 2px;
 }
